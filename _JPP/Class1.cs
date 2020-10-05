@@ -32,7 +32,7 @@ namespace JPP
                 Editor acDocEd = Application.DocumentManager.MdiActiveDocument.Editor;
 
                 PromptSelectionResult acSSPrompt;
-                 acSSPrompt = acDoc.Editor.GetSelection();
+                acSSPrompt = acDoc.Editor.GetSelection();
 
 
                 if (acSSPrompt.Status == PromptStatus.OK)
@@ -50,10 +50,10 @@ namespace JPP
                             {
                                 BlockReference acBlkRef = (BlockReference)acTrans.GetObject(acSSObj.ObjectId, OpenMode.ForWrite) as BlockReference;
                                 zmiananawartwy(acBlkRef, acTrans);
-                            }  
                             }
+                        }
                     }
-                } 
+                }
                 acTrans.Commit();
                 acDocEd.Regen();
             }
@@ -68,16 +68,36 @@ namespace JPP
             foreach (ObjectId asObjId in acBlkTblRec)
             {
                 Entity e = (Entity)acTrans1.GetObject(asObjId, OpenMode.ForWrite);
-                
+
                 e.Layer = "0";
 
-                if  (e.GetType().Name == "BlockReference")
+                if (e.GetType().Name == "BlockReference")
                 {
                     zmiananawartwy((BlockReference)e, acTrans1);
                 }
             }
 
         }
+
+        [CommandMethod("JPP_HKT_schemat")]
+        public void JPP_HKT_schemat()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.KHT_schemat();
+
+        }
+
+
+        [CommandMethod("JPP_HKT_schemat_rys")]
+        public void JPP_HKT_schemat_rys()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+
+            hKT.rysuj_schemat_rifu_80(new Point3d(100,100,0));
+
+        }
+
+
     }
 }
     
