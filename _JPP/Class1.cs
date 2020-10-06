@@ -4,7 +4,7 @@ using Autodesk.AutoCAD.ApplicationServices;
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.EditorInput;
 using Autodesk.AutoCAD.Geometry;
-
+using System.Collections.Generic;
 
 namespace JPP
 {
@@ -93,7 +93,7 @@ namespace JPP
         {
             _JPP.HKT_class hKT = new _JPP.HKT_class();
 
-            hKT.rysuj_schemat_rifu_80(new Point3d(100,100,0));
+            hKT.rysuj_schemat_rifu_80(new Point3d(100,100,0),   );
 
         }
 

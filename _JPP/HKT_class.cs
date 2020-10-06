@@ -110,20 +110,26 @@ namespace _JPP
             }
             //napisycad1 = tabelka.textycad;
             //tabelka1 = tabelka;
+          
+
+
+
+            ////TODO tutaj dorobić prodecyrę wszystkich i wywołanie różnych schematów
+
         }
 
 
-        public void rysuj_schemat_rifu_80(Point3d X0Y0)
+
+
+
+
+
+        public void rysuj_schemat_rifu_80(Point3d X0Y0, List<string> teksty)
         {
 
             Document acDoc = Application.DocumentManager.MdiActiveDocument;
             Database acCurDb = acDoc.Database;
-
-           
-            Point3d X1Y1;
-
-
-
+            
             using (Transaction acTrans = acCurDb.TransactionManager.StartTransaction())
             {
 
@@ -131,6 +137,7 @@ namespace _JPP
                 BlockTable acBlkTbl;
                 acBlkTbl = acTrans.GetObject(acCurDb.BlockTableId, OpenMode.ForRead) as BlockTable;
 
+                ObjectIdCollection acObjIdColl = new ObjectIdCollection();
 
                 //zasil
                 // Create a lightweight polyline
@@ -150,9 +157,10 @@ namespace _JPP
                 acPoly1.AddVertexAt(2, new Point2d(X0Y0.X - 300 - 960, X0Y0.Y + 17700 + 560), 0, 0, 0);
                 acPoly1.Closed = true;
 
-                Ellipse acEllipse = new Ellipse(new Point3d(X0Y0.X - 300 - 960, X0Y0.Y + 17700 + 280, 0), new Vector3d(10, 20, 0), new Vector3d(30, 40, 0), 0.25, 0, 2 * Math.PI);
-                  
 
+                Ellipse acEllipse = new Ellipse(new Point3d(X0Y0.X - 300 - 960, X0Y0.Y + 17700 + 280, 0), 40* Vector3d.ZAxis, 160 * Vector3d.YAxis, 0.25, 0, 360 * Math.Atan(1.0) / 45.0);
+
+                                  
 
                 //antena
                 Autodesk.AutoCAD.DatabaseServices.Arc acArc = new Autodesk.AutoCAD.DatabaseServices.Arc(
@@ -177,9 +185,20 @@ namespace _JPP
 
 
 
-                // Add the new object to the block table record and the transaction
+                MText acMText = new MText();
+                acMText.SetDatabaseDefaults();
+                acMText.Rotation = Math.PI / 2;
+                acMText.SetAttachmentMovingLocation(AttachmentPoint.MiddleCenter);
+                acMText.Location = new Point3d(X0Y0.X , X0Y0.Y + 8800,0);
+                acMText.ColorIndex = 7;
+                acMText.Contents = teksty[0];
+                acMText.TextHeight = 250;
 
-                Autodesk.AutoCAD.DatabaseServices.Wipeout wipeout = new Autodesk.AutoCAD.DatabaseServices.Wipeout();
+
+
+                    // Add the new object to the block table record and the transaction
+
+                    Autodesk.AutoCAD.DatabaseServices.Wipeout wipeout = new Autodesk.AutoCAD.DatabaseServices.Wipeout();
 
                 var space = (BlockTableRecord)acTrans.GetObject(acCurDb.CurrentSpaceId, OpenMode.ForWrite);
                 space.AppendEntity(acPoly);
@@ -194,7 +213,7 @@ namespace _JPP
                 space.AppendEntity(acline5);
 
                 space.AppendEntity(acEllipse);
-
+                space.AppendEntity(acMText);
 
 
 
@@ -212,9 +231,18 @@ namespace _JPP
 
                 acTrans.AddNewlyCreatedDBObject(acEllipse, true);
 
+                acTrans.AddNewlyCreatedDBObject(acMText, true);
+
+
+
+
+
 
 
                 acTrans.Commit();
+
+                Hatch_object(acEllipse.ObjectId);
+
 
             }
 
@@ -222,6 +250,77 @@ namespace _JPP
 
 
          }
+
+        public static void HatchPolyLine(ObjectId plineId)
+        {
+            try
+            {
+                if (plineId.IsNull)
+                    throw new ArgumentNullException("plineId");
+
+                if (plineId.ObjectClass != RXObject.GetClass(typeof(Polyline)))
+                    throw new Autodesk.AutoCAD.Runtime.Exception(ErrorStatus.IllegalEntityType);
+
+                var ids = new ObjectIdCollection();
+                ids.Add(plineId);
+
+                using (var tr = plineId.Database.TransactionManager.StartTransaction())
+                {
+                    var pline = (Polyline)tr.GetObject(plineId, OpenMode.ForRead);
+                    if (!(pline.Closed || pline.GetPoint2dAt(0).IsEqualTo(pline.GetPoint2dAt(pline.NumberOfVertices - 1))))
+                        throw new InvalidOperationException("Opened polyline.");
+
+                    var owner = (BlockTableRecord)tr.GetObject(pline.OwnerId, OpenMode.ForWrite);
+                    var hatch = new Hatch();
+                    hatch.SetHatchPattern(HatchPatternType.PreDefined, "SOLID");
+                    owner.AppendEntity(hatch);
+                    tr.AddNewlyCreatedDBObject(hatch, true);
+                    hatch.Associative = true;
+                    hatch.AppendLoop(HatchLoopTypes.Default, ids);
+                    hatch.EvaluateHatch(true);
+                    tr.Commit();
+                }
+            }
+            catch (System.Exception ex)
+            {
+                var ed = Application.DocumentManager.MdiActiveDocument.Editor;
+                ed.WriteMessage($"{ex.Message}\n{ex.StackTrace}");
+            }
+        }
+
+        public static void Hatch_object(ObjectId objId)
+        {
+            try
+            {
+                if (objId.IsNull)
+                    throw new ArgumentNullException("objId");
+
+                
+                var ids = new ObjectIdCollection();
+                ids.Add(objId);
+
+                using (var tr = objId.Database.TransactionManager.StartTransaction())
+                {
+
+                    var pline = (Ellipse)tr.GetObject(objId, OpenMode.ForRead);
+
+                    var owner = (BlockTableRecord)tr.GetObject(pline.OwnerId, OpenMode.ForWrite);
+                    var hatch = new Hatch();
+                    hatch.SetHatchPattern(HatchPatternType.PreDefined, "SOLID");
+                    owner.AppendEntity(hatch);
+                    tr.AddNewlyCreatedDBObject(hatch, true);
+                    hatch.Associative = true;
+                    hatch.AppendLoop(HatchLoopTypes.Default, ids);
+                    hatch.EvaluateHatch(true);
+                    tr.Commit();
+                }
+            }
+            catch (System.Exception ex)
+            {
+                var ed = Application.DocumentManager.MdiActiveDocument.Editor;
+                ed.WriteMessage($"{ex.Message}\n{ex.StackTrace}");
+            }
+        }
 
 
 
