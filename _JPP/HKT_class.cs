@@ -93,6 +93,8 @@ namespace _JPP
                             }
                         }
                     }
+
+
                     acTrans.Commit();
 
                     //porzadkowanie wartosci
@@ -106,27 +108,60 @@ namespace _JPP
                                                   "\n Wierszy: " + tabelka.ilewierszy.ToString());
 
 
+
+                tabelka.punkt5 = acDocEd.GetPoint("\n Wskaż wstawienia schematu").Value;
+
                 }
             }
             //napisycad1 = tabelka.textycad;
             //tabelka1 = tabelka;
-          
+
 
 
 
             ////TODO tutaj dorobić prodecyrę wszystkich i wywołanie różnych schematów
+            rysuj_schemat(tabelka);
+        }
+
+
+        public void rysuj_schemat(Tabelka tabelka)
+        {
+            int odu=1;
+
+            Point3d point_tmp = tabelka.punkt5;
+
+            for (int k=1; k<= tabelka.ilewierszy; k++)
+            {
+
+                //sprawdz ilosc ODU
+                //18
+                odu = 1;
+                if (tabelka.napisy_z_excel[k, 18] == "2") { odu = 2; }
+               
+                
+                //sprawdz czsetotliwosc
+                if ((tabelka.napisy_z_excel[k, 6] == "80,0") || (tabelka.napisy_z_excel[k, 6] == "80"))
+                    { rysuj_schemat_rifu_80(tabelka, k, point_tmp); 
+                     point_tmp =new Point3d(point_tmp.X + 3650, point_tmp.Y, 0);
+                        }
+                               
+
+                else
+                { //rysuj_schemat_rifu_23(tabelka, k,point_tmp);
+                    point_tmp = new Point3d(point_tmp.X + 3650, point_tmp.Y, 0);
+                }
+
+            }
+
 
         }
 
 
 
 
-
-
-
-        public void rysuj_schemat_rifu_80(Point3d X0Y0, List<string> teksty)
+        public void rysuj_schemat_rifu_80(Tabelka tabelka,int wiersz, Point3d X0Y0)
         {
-
+           
             Document acDoc = Application.DocumentManager.MdiActiveDocument;
             Database acCurDb = acDoc.Database;
             
@@ -146,7 +181,7 @@ namespace _JPP
                 acPoly.AddVertexAt(0, new Point2d(X0Y0.X+0 , X0Y0.Y+0), 0, 0, 0);
                 acPoly.AddVertexAt(1, new Point2d(X0Y0.X + 0, X0Y0.Y + 17800), 0, 0, 0);
                 acPoly.AddVertexAt(2, new Point2d(X0Y0.X - 300, X0Y0.Y + 17800), 0, 0, 0);
-
+                acPoly.Layer = zmiana_warstwy_tabelka_na_schemat(tabelka.napisy_z_excel_kolor[wiersz, 19]);
 
                 //odu
                 Autodesk.AutoCAD.DatabaseServices.Polyline acPoly1 = new Autodesk.AutoCAD.DatabaseServices.Polyline();
@@ -156,18 +191,18 @@ namespace _JPP
                 acPoly1.AddVertexAt(2, new Point2d(X0Y0.X - 300-960, X0Y0.Y + 17700), 0, 0, 0);
                 acPoly1.AddVertexAt(2, new Point2d(X0Y0.X - 300 - 960, X0Y0.Y + 17700 + 560), 0, 0, 0);
                 acPoly1.Closed = true;
-
+                acPoly1.Layer = zmiana_warstwy_tabelka_na_schemat(tabelka.napisy_z_excel_kolor[wiersz, 17]);
 
                 Ellipse acEllipse = new Ellipse(new Point3d(X0Y0.X - 300 - 960, X0Y0.Y + 17700 + 280, 0), 40* Vector3d.ZAxis, 160 * Vector3d.YAxis, 0.25, 0, 360 * Math.Atan(1.0) / 45.0);
+                acEllipse.Layer = zmiana_warstwy_tabelka_na_schemat(tabelka.napisy_z_excel_kolor[wiersz, 3]);
 
-                                  
 
                 //antena
                 Autodesk.AutoCAD.DatabaseServices.Arc acArc = new Autodesk.AutoCAD.DatabaseServices.Arc(
                     new Point3d(X0Y0.X - 300 - 960 - 1050, X0Y0.Y + 17800 + 180, 0), 1010, 3.1415*1.5, 3.1415/2);
-
-
+                acArc.Layer = zmiana_warstwy_tabelka_na_schemat(tabelka.napisy_z_excel_kolor[wiersz, 3]);
                 Autodesk.AutoCAD.DatabaseServices.Line acline = new Line(acArc.StartPoint, acArc.EndPoint);
+                acline.Layer = zmiana_warstwy_tabelka_na_schemat(tabelka.napisy_z_excel_kolor[wiersz, 3]);
 
                 //kabel eth
 
@@ -176,29 +211,114 @@ namespace _JPP
                 acPoly2.AddVertexAt(0, new Point2d(X0Y0.X + 850, X0Y0.Y + 0), 0, 0, 0);
                 acPoly2.AddVertexAt(1, new Point2d(X0Y0.X + 850, X0Y0.Y + 17800+250), 0, 0, 0);
                 acPoly2.AddVertexAt(2, new Point2d(X0Y0.X - 300, X0Y0.Y + 17800+250), 0, 0, 0);
-               
+                acPoly2.Layer = zmiana_warstwy_tabelka_na_schemat(tabelka.napisy_z_excel_kolor[wiersz, 19]);
+
+                //kabel lWL
+
+                Line acline6 = new Line(new Point3d(X0Y0.X - 850, X0Y0.Y + 0,0), new Point3d(X0Y0.X - 850, X0Y0.Y +17700,0));
+                acline6.Layer = zmiana_warstwy_tabelka_na_schemat(tabelka.napisy_z_excel_kolor[wiersz, 22]);
+
+
+                //Autodesk.AutoCAD.DatabaseServices.Polyline acPoly3 = new Autodesk.AutoCAD.DatabaseServices.Polyline();
+                //acPoly3.SetDatabaseDefaults();
+                //acPoly3.AddVertexAt(0, new Point2d(X0Y0.X - 850, X0Y0.Y + 0), 0, 0, 0);
+                //acPoly3.AddVertexAt(1, new Point2d(X0Y0.X - 850, X0Y0.Y + 17800 + 250), 0, 0, 0);
+                //acPoly3.AddVertexAt(2, new Point2d(X0Y0.X - 300, X0Y0.Y + 17800 + 250), 0, 0, 0);
+                //acPoly3.Layer = zmiana_warstwy_tabelka_na_schemat(tabelka.napisy_z_excel_kolor[wiersz, 22]);
+
                 //uziemienie
                 Autodesk.AutoCAD.DatabaseServices.Line acline2 = new Line(new Point3d(X0Y0.X - 400, X0Y0.Y + 17700,0), new Point3d(X0Y0.X - 400, X0Y0.Y + 17700-230, 0));
                 Autodesk.AutoCAD.DatabaseServices.Line acline3 = new Line(new Point3d(X0Y0.X - 400-77, X0Y0.Y + 17700-230, 0), new Point3d(X0Y0.X - 400+77, X0Y0.Y + 17700 - 230, 0));
                 Autodesk.AutoCAD.DatabaseServices.Line acline4 = new Line(new Point3d(X0Y0.X - 400 - 56, X0Y0.Y + 17700 - 230-40, 0), new Point3d(X0Y0.X - 400 + 56, X0Y0.Y + 17700 - 230-40, 0));
                 Autodesk.AutoCAD.DatabaseServices.Line acline5 = new Line(new Point3d(X0Y0.X - 400 - 20, X0Y0.Y + 17700 - 230-80, 0), new Point3d(X0Y0.X - 400 + 20, X0Y0.Y + 17700 - 230-80, 0));
+                
+                acline2.Layer = zmiana_warstwy_tabelka_na_schemat(tabelka.napisy_z_excel_kolor[wiersz, 17]);
+                acline3.Layer = acline2.Layer;
+                acline4.Layer = acline2.Layer;
+                acline5.Layer = acline2.Layer;
 
 
 
+
+                  //kabel dc
                 MText acMText = new MText();
                 acMText.SetDatabaseDefaults();
                 acMText.Rotation = Math.PI / 2;
-                acMText.SetAttachmentMovingLocation(AttachmentPoint.MiddleCenter);
+                acMText.Attachment = AttachmentPoint.MiddleLeft;
                 acMText.Location = new Point3d(X0Y0.X , X0Y0.Y + 8800,0);
-                acMText.ColorIndex = 7;
-                acMText.Contents = teksty[0];
+                
+
+                acMText.Contents = "1xDC" + "\nL=" + tabelka.napisy_z_excel[wiersz, 21] + " m";
                 acMText.TextHeight = 250;
+                acMText.Layer = zmiana_warstwy_tabelka_na_schemat(tabelka.napisy_z_excel_kolor[wiersz, 19]);
+                
+                //kabel eth
+
+                MText acMText3 = new MText();
+                acMText3.SetDatabaseDefaults();
+                acMText3.Rotation = Math.PI / 2;
+                acMText3.Attachment = AttachmentPoint.MiddleLeft;
+                acMText3.Location = new Point3d(X0Y0.X +850, X0Y0.Y + 8800, 0);
+                
+
+                acMText3.Contents = "1xETH" + "\nL=" + tabelka.napisy_z_excel[wiersz, 21] + " m";
+                acMText3.TextHeight = 250;
+                acMText3.Layer = zmiana_warstwy_tabelka_na_schemat(tabelka.napisy_z_excel_kolor[wiersz, 19]);
+
+                //kabel lwl
+                MText acMText6 = new MText();
+                acMText6.SetDatabaseDefaults();
+                acMText6.Rotation = Math.PI / 2;
+                acMText6.Attachment = AttachmentPoint.MiddleLeft;
+                acMText6.Location = new Point3d(X0Y0.X - 850, X0Y0.Y + 8800, 0);
+                
+
+                acMText6.Contents = tabelka.napisy_z_excel[wiersz, 23] + "x" + tabelka.napisy_z_excel[wiersz, 22] + "\n" + "L=" + tabelka.napisy_z_excel[wiersz, 24] + " m";
+                acMText6.TextHeight = 250;
+                acMText6.Layer = zmiana_warstwy_tabelka_na_schemat(tabelka.napisy_z_excel_kolor[wiersz, 22]);
+
+                //odu
+                MText acMText2 = new MText();
+                acMText2.SetDatabaseDefaults();
+                acMText2.Rotation = 0;
+                acMText2.Attachment = AttachmentPoint.BottomLeft;
+          
+                acMText2.Location = new Point3d(X0Y0.X-1020, X0Y0.Y+ 17830, 0);
+                acMText2.Contents = "ODU";
+                acMText2.TextHeight = 250;
+                acMText2.Layer = zmiana_warstwy_tabelka_na_schemat(tabelka.napisy_z_excel_kolor[wiersz, 17]);
+
+                //rifu
+
+                MText acMText4 = new MText();
+                acMText4.SetDatabaseDefaults();
+                acMText4.Rotation = Math.PI/2;
+                acMText4.Attachment = AttachmentPoint.MiddleCenter;
+
+                acMText4.Location = new Point3d(X0Y0.X - 1890, X0Y0.Y + 17800 + 180, 0);
+                
+                acMText4.Contents = "Rifu %%c" + tabelka.napisy_z_excel[wiersz, 3];
+                acMText4.TextHeight = 250;
+                acMText4.Layer = zmiana_warstwy_tabelka_na_schemat(tabelka.napisy_z_excel_kolor[wiersz, 3]);
+
+                //rifu opis
+
+                MText acMText5 = new MText();
+                acMText5.SetDatabaseDefaults();
+                acMText5.Rotation = 0;
+                acMText5.Attachment = AttachmentPoint.BottomCenter;
+
+                acMText5.Location = new Point3d(X0Y0.X - 700, X0Y0.Y + 19700, 0);
+                acMText5.Contents = tabelka.napisy_z_excel[wiersz, 1]+", "+ tabelka.napisy_z_excel[wiersz, 8];
+                acMText5.TextHeight = 250;
+                acMText5.Layer = zmiana_warstwy_tabelka_na_schemat(tabelka.napisy_z_excel_kolor[wiersz, 3]);
 
 
 
-                    // Add the new object to the block table record and the transaction
 
-                    Autodesk.AutoCAD.DatabaseServices.Wipeout wipeout = new Autodesk.AutoCAD.DatabaseServices.Wipeout();
+                // Add the new object to the block table record and the transaction
+
+                Autodesk.AutoCAD.DatabaseServices.Wipeout wipeout = new Autodesk.AutoCAD.DatabaseServices.Wipeout();
 
                 var space = (BlockTableRecord)acTrans.GetObject(acCurDb.CurrentSpaceId, OpenMode.ForWrite);
                 space.AppendEntity(acPoly);
@@ -211,12 +331,15 @@ namespace _JPP
                 space.AppendEntity(acline3);
                 space.AppendEntity(acline4);
                 space.AppendEntity(acline5);
+                space.AppendEntity(acline6);
 
                 space.AppendEntity(acEllipse);
                 space.AppendEntity(acMText);
-
-
-
+                space.AppendEntity(acMText2);
+                space.AppendEntity(acMText3);
+                space.AppendEntity(acMText4);
+                space.AppendEntity(acMText5);
+                space.AppendEntity(acMText6);
 
                 acTrans.AddNewlyCreatedDBObject(acPoly, true);
                 acTrans.AddNewlyCreatedDBObject(acPoly1, true);
@@ -228,20 +351,22 @@ namespace _JPP
                 acTrans.AddNewlyCreatedDBObject(acline3, true);
                 acTrans.AddNewlyCreatedDBObject(acline4, true);
                 acTrans.AddNewlyCreatedDBObject(acline5, true);
+                acTrans.AddNewlyCreatedDBObject(acline6, true);
 
                 acTrans.AddNewlyCreatedDBObject(acEllipse, true);
 
                 acTrans.AddNewlyCreatedDBObject(acMText, true);
-
-
-
-
+                acTrans.AddNewlyCreatedDBObject(acMText2, true);
+                acTrans.AddNewlyCreatedDBObject(acMText3, true);
+                acTrans.AddNewlyCreatedDBObject(acMText4, true);
+                acTrans.AddNewlyCreatedDBObject(acMText5, true);
+                acTrans.AddNewlyCreatedDBObject(acMText6, true);
 
 
 
                 acTrans.Commit();
 
-                Hatch_object(acEllipse.ObjectId);
+                Hatch_object(acEllipse.ObjectId, acEllipse.Layer);
 
 
             }
@@ -251,7 +376,28 @@ namespace _JPP
 
          }
 
-        public static void HatchPolyLine(ObjectId plineId)
+        private string zmiana_warstwy_tabelka_na_schemat(string wartwa_in)
+        {
+            string wartwa_wyjsc;
+
+            switch (wartwa_in)
+            {
+            case "00_AntennenTabelle_Text_NEU":
+                    wartwa_wyjsc = "10_30_RiFuAntenne_Option";
+                        break;
+
+            case "00_AntennenTabelle":
+
+                    wartwa_wyjsc = "20_30_Kabel_Rifu";
+                    break;
+            default:
+                    wartwa_wyjsc = "0";
+                    break;
+            }
+            return wartwa_wyjsc;
+        }
+
+        public static void HatchPolyLine(ObjectId plineId, string layer1)
         {
             try
             {
@@ -278,6 +424,7 @@ namespace _JPP
                     hatch.Associative = true;
                     hatch.AppendLoop(HatchLoopTypes.Default, ids);
                     hatch.EvaluateHatch(true);
+                    hatch.Layer = layer1;
                     tr.Commit();
                 }
             }
@@ -288,7 +435,7 @@ namespace _JPP
             }
         }
 
-        public static void Hatch_object(ObjectId objId)
+        public static void Hatch_object(ObjectId objId, string layer1)
         {
             try
             {
@@ -307,6 +454,7 @@ namespace _JPP
                     var owner = (BlockTableRecord)tr.GetObject(pline.OwnerId, OpenMode.ForWrite);
                     var hatch = new Hatch();
                     hatch.SetHatchPattern(HatchPatternType.PreDefined, "SOLID");
+                    hatch.Layer = layer1;
                     owner.AppendEntity(hatch);
                     tr.AddNewlyCreatedDBObject(hatch, true);
                     hatch.Associative = true;
@@ -352,7 +500,7 @@ namespace _JPP
             public int ilewierszy = 0;
 
             public string[,] napisy_z_excel = new string[20, 30];
-
+            public string[,] napisy_z_excel_kolor = new string[20, 30];
             public Tabelka()
             {
                 punkt1 = new Point3d();
@@ -518,6 +666,7 @@ namespace _JPP
                 text1.X0 = Convert.ToInt32(mText.Position.X);
                 text1.Y0 = Convert.ToInt32(mText.Position.Y);
                 text1.Text = mText.TextString;
+                text1.Kolor = mText.Layer;
 
                 textycad.Add(text1);
             }
@@ -530,6 +679,7 @@ namespace _JPP
                 text1.X0 = Convert.ToInt32(mText.Location.X);
                 text1.Y0 = Convert.ToInt32(mText.Location.Y);
                 text1.Text = mText.Text;
+                text1.Kolor = mText.Layer;
 
                 textycad.Add(text1);
             }
@@ -542,7 +692,7 @@ namespace _JPP
                 text1.X0 = Convert.ToInt32(attRef.Position.X);
                 text1.Y0 = Convert.ToInt32(attRef.Position.Y);
                 text1.Text = attRef.TextString;
-
+                text1.Kolor = attRef.Layer;
                 textycad.Add(text1);
 
 
@@ -575,11 +725,13 @@ namespace _JPP
                         if ((text2.Y0 < zesatwwierszy[j].Y0) && (text2.Y0 > zesatwwierszy[j].Y1))
                         {
                             text2.Wier = j;
+                        napisy_z_excel[j, text2.Kol] = text2.Text;
+                            napisy_z_excel_kolor[j, text2.Kol] = text2.Kolor;
                             break;
                         }
                     }
 
-                    napisy_z_excel[j, k] = text2.Text;
+                    
 
 
                 }
@@ -604,19 +756,20 @@ namespace _JPP
             public int Wier { get; set; }
             public int Kol { get; set; }
             public string Text { get; set; }
-
+            public string Kolor { get; set; }
             public Texty()
             {
                 Text = "-";
             }
 
-            public Texty(string text, int x0, int y0, int wier, int kol)
+            public Texty(string text, int x0, int y0, int wier, int kol, string kolor)
             {
                 Text = text;
                 X0 = x0;
                 Y0 = y0;
                 Wier = wier;
                 Kol = kol;
+                Kolor = kolor;
 
             }
         }
