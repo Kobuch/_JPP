@@ -144,16 +144,13 @@ namespace _JPP
                     { rysuj_schemat_rifu_80(tabelka, k, point_tmp); 
                      point_tmp =new Point3d(point_tmp.X + 3650, point_tmp.Y, 0);
                         }
-                               
+                            
 
                 else
                 { //rysuj_schemat_rifu_23(tabelka, k,point_tmp);
                     point_tmp = new Point3d(point_tmp.X + 3650, point_tmp.Y, 0);
                 }
-
             }
-
-
         }
 
 
@@ -183,13 +180,34 @@ namespace _JPP
                 acPoly.AddVertexAt(2, new Point2d(X0Y0.X - 300, X0Y0.Y + 17800), 0, 0, 0);
                 acPoly.Layer = zmiana_warstwy_tabelka_na_schemat(tabelka.napisy_z_excel_kolor[wiersz, 19]);
 
+                Autodesk.AutoCAD.DatabaseServices.Polyline acPolyk = new Autodesk.AutoCAD.DatabaseServices.Polyline();
+                acPolyk.SetDatabaseDefaults();
+                acPolyk.AddVertexAt(0, new Point2d(X0Y0.X, X0Y0.Y + 120+30), 0, 0, 0);
+                acPolyk.AddVertexAt(1, new Point2d(X0Y0.X + 30, X0Y0.Y + 120+30), 0, 0, 0);
+                acPolyk.AddVertexAt(2, new Point2d(X0Y0.X + 30, X0Y0.Y + 45+30), 0, 0, 0);
+                acPolyk.AddVertexAt(3, new Point2d(X0Y0.X + 15, X0Y0.Y + 45+30), 0, 0, 0);
+                acPolyk.AddVertexAt(4, new Point2d(X0Y0.X + 15, X0Y0.Y + 30), 0, 0, 0);
+                acPolyk.AddVertexAt(5, new Point2d(X0Y0.X - 15, X0Y0.Y + 30), 0, 0, 0);
+                acPolyk.AddVertexAt(6, new Point2d(X0Y0.X - 15, X0Y0.Y + 45+30), 0, 0, 0);
+                acPolyk.AddVertexAt(7, new Point2d(X0Y0.X - 30, X0Y0.Y + 45+30), 0, 0, 0);
+                acPolyk.AddVertexAt(8, new Point2d(X0Y0.X - 30, X0Y0.Y + 120+30), 0, 0, 0);
+                acPolyk.Closed = true;
+
+                acPolyk.Layer = zmiana_warstwy_tabelka_na_schemat(tabelka.napisy_z_excel_kolor[wiersz, 19]);
+
+                Autodesk.AutoCAD.DatabaseServices.Arc acArck0 = new Autodesk.AutoCAD.DatabaseServices.Arc(
+                   new Point3d(X0Y0.X , X0Y0.Y + 60, 0), 60 , 3.1415,0 );
+                acArck0.Layer = zmiana_warstwy_tabelka_na_schemat(tabelka.napisy_z_excel_kolor[wiersz, 19]);
+
+
+
                 //odu
                 Autodesk.AutoCAD.DatabaseServices.Polyline acPoly1 = new Autodesk.AutoCAD.DatabaseServices.Polyline();
                 acPoly1.SetDatabaseDefaults();
-                acPoly1.AddVertexAt(0, new Point2d(X0Y0.X -300, X0Y0.Y + 17700), 0, 0, 0);
+                acPoly1.AddVertexAt(0, new Point2d(X0Y0.X - 300, X0Y0.Y + 17700), 0, 0, 0);
                 acPoly1.AddVertexAt(1, new Point2d(X0Y0.X - 300, X0Y0.Y + 17700 + 560), 0, 0, 0);
-                acPoly1.AddVertexAt(2, new Point2d(X0Y0.X - 300-960, X0Y0.Y + 17700), 0, 0, 0);
                 acPoly1.AddVertexAt(2, new Point2d(X0Y0.X - 300 - 960, X0Y0.Y + 17700 + 560), 0, 0, 0);
+                acPoly1.AddVertexAt(3, new Point2d(X0Y0.X - 300 - 960, X0Y0.Y + 17700 ), 0, 0, 0);
                 acPoly1.Closed = true;
                 acPoly1.Layer = zmiana_warstwy_tabelka_na_schemat(tabelka.napisy_z_excel_kolor[wiersz, 17]);
 
@@ -213,18 +231,51 @@ namespace _JPP
                 acPoly2.AddVertexAt(2, new Point2d(X0Y0.X - 300, X0Y0.Y + 17800+250), 0, 0, 0);
                 acPoly2.Layer = zmiana_warstwy_tabelka_na_schemat(tabelka.napisy_z_excel_kolor[wiersz, 19]);
 
+                Autodesk.AutoCAD.DatabaseServices.Polyline acPolyk2 = new Autodesk.AutoCAD.DatabaseServices.Polyline();
+                acPolyk2.SetDatabaseDefaults();
+                acPolyk2.AddVertexAt(0, new Point2d(X0Y0.X+850, X0Y0.Y + 120 + 30), 0, 0, 0);
+                acPolyk2.AddVertexAt(1, new Point2d(X0Y0.X + 30 + 850, X0Y0.Y + 120 + 30), 0, 0, 0);
+                acPolyk2.AddVertexAt(2, new Point2d(X0Y0.X + 30 + 850, X0Y0.Y + 45 + 30), 0, 0, 0);
+                acPolyk2.AddVertexAt(3, new Point2d(X0Y0.X + 15 + 850, X0Y0.Y + 45 + 30), 0, 0, 0);
+                acPolyk2.AddVertexAt(4, new Point2d(X0Y0.X + 15 + 850, X0Y0.Y + 30), 0, 0, 0);
+                acPolyk2.AddVertexAt(5, new Point2d(X0Y0.X - 15 + 850, X0Y0.Y + 30), 0, 0, 0);
+                acPolyk2.AddVertexAt(6, new Point2d(X0Y0.X - 15 + 850, X0Y0.Y + 45 + 30), 0, 0, 0);
+                acPolyk2.AddVertexAt(7, new Point2d(X0Y0.X - 30 + 850, X0Y0.Y + 45 + 30), 0, 0, 0);
+                acPolyk2.AddVertexAt(8, new Point2d(X0Y0.X - 30 + 850, X0Y0.Y + 120 + 30), 0, 0, 0);
+                acPolyk2.Closed = true;
+
+                acPolyk2.Layer = zmiana_warstwy_tabelka_na_schemat(tabelka.napisy_z_excel_kolor[wiersz, 19]);
+
+                Autodesk.AutoCAD.DatabaseServices.Arc acArck2 = new Autodesk.AutoCAD.DatabaseServices.Arc(
+               new Point3d(X0Y0.X+850, X0Y0.Y + 60, 0), 60, 3.1415, 0);
+                acArck2.Layer = zmiana_warstwy_tabelka_na_schemat(tabelka.napisy_z_excel_kolor[wiersz, 19]);
+
+
+
+
                 //kabel lWL
 
                 Line acline6 = new Line(new Point3d(X0Y0.X - 850, X0Y0.Y + 0,0), new Point3d(X0Y0.X - 850, X0Y0.Y +17700,0));
                 acline6.Layer = zmiana_warstwy_tabelka_na_schemat(tabelka.napisy_z_excel_kolor[wiersz, 22]);
 
+                Autodesk.AutoCAD.DatabaseServices.Polyline acPolyk3 = new Autodesk.AutoCAD.DatabaseServices.Polyline();
+                acPolyk3.SetDatabaseDefaults();
+                acPolyk3.AddVertexAt(0, new Point2d(X0Y0.X - 850, X0Y0.Y + 120 + 30), 0, 0, 0);
+                acPolyk3.AddVertexAt(1, new Point2d(X0Y0.X + 30 - 850, X0Y0.Y + 120 + 30), 0, 0, 0);
+                acPolyk3.AddVertexAt(2, new Point2d(X0Y0.X + 30 - 850, X0Y0.Y + 45 + 30), 0, 0, 0);
+                acPolyk3.AddVertexAt(3, new Point2d(X0Y0.X + 15 - 850, X0Y0.Y + 45 + 30), 0, 0, 0);
+                acPolyk3.AddVertexAt(4, new Point2d(X0Y0.X + 15 - 850, X0Y0.Y + 30), 0, 0, 0);
+                acPolyk3.AddVertexAt(5, new Point2d(X0Y0.X - 15 - 850, X0Y0.Y + 30), 0, 0, 0);
+                acPolyk3.AddVertexAt(6, new Point2d(X0Y0.X - 15 - 850, X0Y0.Y + 45 + 30), 0, 0, 0);
+                acPolyk3.AddVertexAt(7, new Point2d(X0Y0.X - 30 - 850, X0Y0.Y + 45 + 30), 0, 0, 0);
+                acPolyk3.AddVertexAt(8, new Point2d(X0Y0.X - 30 - 850, X0Y0.Y + 120 + 30), 0, 0, 0);
+                acPolyk3.Closed = true;
 
-                //Autodesk.AutoCAD.DatabaseServices.Polyline acPoly3 = new Autodesk.AutoCAD.DatabaseServices.Polyline();
-                //acPoly3.SetDatabaseDefaults();
-                //acPoly3.AddVertexAt(0, new Point2d(X0Y0.X - 850, X0Y0.Y + 0), 0, 0, 0);
-                //acPoly3.AddVertexAt(1, new Point2d(X0Y0.X - 850, X0Y0.Y + 17800 + 250), 0, 0, 0);
-                //acPoly3.AddVertexAt(2, new Point2d(X0Y0.X - 300, X0Y0.Y + 17800 + 250), 0, 0, 0);
-                //acPoly3.Layer = zmiana_warstwy_tabelka_na_schemat(tabelka.napisy_z_excel_kolor[wiersz, 22]);
+                acPolyk3.Layer = zmiana_warstwy_tabelka_na_schemat(tabelka.napisy_z_excel_kolor[wiersz, 22]);
+
+                Autodesk.AutoCAD.DatabaseServices.Arc acArck3 = new Autodesk.AutoCAD.DatabaseServices.Arc(
+                        new Point3d(X0Y0.X - 850, X0Y0.Y + 60, 0), 60, 3.1415, 0);
+                acArck3.Layer = zmiana_warstwy_tabelka_na_schemat(tabelka.napisy_z_excel_kolor[wiersz, 22]);
 
                 //uziemienie
                 Autodesk.AutoCAD.DatabaseServices.Line acline2 = new Line(new Point3d(X0Y0.X - 400, X0Y0.Y + 17700,0), new Point3d(X0Y0.X - 400, X0Y0.Y + 17700-230, 0));
@@ -340,12 +391,25 @@ namespace _JPP
                 space.AppendEntity(acMText4);
                 space.AppendEntity(acMText5);
                 space.AppendEntity(acMText6);
+                space.AppendEntity(acPolyk);
+                space.AppendEntity(acPolyk2); 
+                space.AppendEntity(acPolyk3);
+                space.AppendEntity(acArck0);
+                space.AppendEntity(acArck2);
+                space.AppendEntity(acArck3);
+
 
                 acTrans.AddNewlyCreatedDBObject(acPoly, true);
+                acTrans.AddNewlyCreatedDBObject(acPolyk, true);
+
                 acTrans.AddNewlyCreatedDBObject(acPoly1, true);
                 acTrans.AddNewlyCreatedDBObject(acArc, true);
                 acTrans.AddNewlyCreatedDBObject(acline, true);
                 acTrans.AddNewlyCreatedDBObject(acPoly2, true);
+                acTrans.AddNewlyCreatedDBObject(acPolyk2, true);
+                acTrans.AddNewlyCreatedDBObject(acPolyk3, true);
+
+
 
                 acTrans.AddNewlyCreatedDBObject(acline2, true);
                 acTrans.AddNewlyCreatedDBObject(acline3, true);
@@ -362,16 +426,19 @@ namespace _JPP
                 acTrans.AddNewlyCreatedDBObject(acMText5, true);
                 acTrans.AddNewlyCreatedDBObject(acMText6, true);
 
+                acTrans.AddNewlyCreatedDBObject(acArck0, true);
+                acTrans.AddNewlyCreatedDBObject(acArck2, true);
+                acTrans.AddNewlyCreatedDBObject(acArck3, true);
 
 
                 acTrans.Commit();
 
                 Hatch_object(acEllipse.ObjectId, acEllipse.Layer);
+                HatchPolyLine(acPolyk.ObjectId, acPolyk.Layer);
 
-
+                HatchPolyLine(acPolyk2.ObjectId, acPolyk2.Layer);
+                HatchPolyLine(acPolyk3.ObjectId, acPolyk3.Layer);
             }
-
-        
 
 
          }
