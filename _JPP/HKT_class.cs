@@ -147,7 +147,7 @@ namespace _JPP
                             
 
                 else
-                { //rysuj_schemat_rifu_23(tabelka, k,point_tmp);
+                { rysuj_schemat_rifu_normal(tabelka, k,point_tmp);
                     point_tmp = new Point3d(point_tmp.X + 3650, point_tmp.Y, 0);
                 }
             }
@@ -442,6 +442,371 @@ namespace _JPP
 
 
          }
+
+        public void rysuj_schemat_rifu_normal(Tabelka tabelka, int wiersz, Point3d X0Y0)
+        {
+
+            Document acDoc = Application.DocumentManager.MdiActiveDocument;
+            Database acCurDb = acDoc.Database;
+
+            using (Transaction acTrans = acCurDb.TransactionManager.StartTransaction())
+            {
+
+                Editor acDocEd = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
+                BlockTable acBlkTbl;
+                acBlkTbl = acTrans.GetObject(acCurDb.BlockTableId, OpenMode.ForRead) as BlockTable;
+
+                ObjectIdCollection acObjIdColl = new ObjectIdCollection();
+                var space = (BlockTableRecord)acTrans.GetObject(acCurDb.CurrentSpaceId, OpenMode.ForWrite);
+
+
+                // RG8 1   
+                Line acline1 = new Line(new Point3d(X0Y0.X , X0Y0.Y + 0, 0), new Point3d(X0Y0.X , X0Y0.Y + 14800, 0));
+                acline1.Layer = zmiana_warstwy_tabelka_na_schemat(tabelka.napisy_z_excel_kolor[wiersz, 22]);
+
+                space.AppendEntity(acline1);
+                acTrans.AddNewlyCreatedDBObject(acline1, true);
+
+                MText acMText1 = new MText();
+                acMText1.SetDatabaseDefaults();
+                acMText1.Rotation = Math.PI / 2;
+                acMText1.Attachment = AttachmentPoint.MiddleLeft;
+                acMText1.Location = new Point3d(X0Y0.X , X0Y0.Y + 8800, 0);
+                acMText1.Contents = tabelka.napisy_z_excel[wiersz, 19]  + "-Kabel\nL=" + tabelka.napisy_z_excel[wiersz, 21] + " m";
+                acMText1.TextHeight = 250;
+                acMText1.Layer = zmiana_warstwy_tabelka_na_schemat(tabelka.napisy_z_excel_kolor[wiersz, 19]);
+
+                space.AppendEntity(acMText1);
+                acTrans.AddNewlyCreatedDBObject(acMText1, true);
+
+
+                Autodesk.AutoCAD.DatabaseServices.Polyline acPolyk10 = new Autodesk.AutoCAD.DatabaseServices.Polyline();
+                acPolyk10.SetDatabaseDefaults();
+                acPolyk10.AddVertexAt(0, new Point2d(X0Y0.X, X0Y0.Y + 120 + 30), 0, 0, 0);
+                acPolyk10.AddVertexAt(1, new Point2d(X0Y0.X + 30, X0Y0.Y + 120 + 30), 0, 0, 0);
+                acPolyk10.AddVertexAt(2, new Point2d(X0Y0.X + 30, X0Y0.Y + 45 + 30), 0, 0, 0);
+                acPolyk10.AddVertexAt(3, new Point2d(X0Y0.X + 15, X0Y0.Y + 45 + 30), 0, 0, 0);
+                acPolyk10.AddVertexAt(4, new Point2d(X0Y0.X + 15, X0Y0.Y + 30), 0, 0, 0);
+                acPolyk10.AddVertexAt(5, new Point2d(X0Y0.X - 15, X0Y0.Y + 30), 0, 0, 0);
+                acPolyk10.AddVertexAt(6, new Point2d(X0Y0.X - 15, X0Y0.Y + 45 + 30), 0, 0, 0);
+                acPolyk10.AddVertexAt(7, new Point2d(X0Y0.X - 30, X0Y0.Y + 45 + 30), 0, 0, 0);
+                acPolyk10.AddVertexAt(8, new Point2d(X0Y0.X - 30, X0Y0.Y + 120 + 30), 0, 0, 0);
+                acPolyk10.Closed = true;
+                acPolyk10.Layer = zmiana_warstwy_tabelka_na_schemat(tabelka.napisy_z_excel_kolor[wiersz, 19]);
+
+                space.AppendEntity(acPolyk10);
+                acTrans.AddNewlyCreatedDBObject(acPolyk10, true);
+
+
+                Autodesk.AutoCAD.DatabaseServices.Arc acArck10 = new Autodesk.AutoCAD.DatabaseServices.Arc(
+                   new Point3d(X0Y0.X, X0Y0.Y + 60, 0), 60, 3.1415, 0);
+                acArck10.Layer = zmiana_warstwy_tabelka_na_schemat(tabelka.napisy_z_excel_kolor[wiersz, 19]);
+
+                space.AppendEntity(acArck10);
+                acTrans.AddNewlyCreatedDBObject(acArck10, true);
+
+
+                Autodesk.AutoCAD.DatabaseServices.Polyline acPolykg10 = new Autodesk.AutoCAD.DatabaseServices.Polyline();
+                acPolykg10.SetDatabaseDefaults();
+                acPolykg10.AddVertexAt(0, new Point2d(X0Y0.X, X0Y0.Y + 14770 ), 0, 0, 0);
+                acPolykg10.AddVertexAt(1, new Point2d(X0Y0.X + 15, X0Y0.Y + 14770), 0, 0, 0);
+                acPolykg10.AddVertexAt(2, new Point2d(X0Y0.X + 15, X0Y0.Y + 14770 - 45 ), 0, 0, 0);
+                acPolykg10.AddVertexAt(3, new Point2d(X0Y0.X + 30, X0Y0.Y + +14770-45), 0, 0, 0);
+                acPolykg10.AddVertexAt(4, new Point2d(X0Y0.X + 30, X0Y0.Y + 14770-120), 0, 0, 0);
+                acPolykg10.AddVertexAt(5, new Point2d(X0Y0.X - 30, X0Y0.Y + 14770-120), 0, 0, 0);
+                acPolykg10.AddVertexAt(6, new Point2d(X0Y0.X - 30, X0Y0.Y + 14770 -45), 0, 0, 0);
+                acPolykg10.AddVertexAt(7, new Point2d(X0Y0.X - 15, X0Y0.Y + +14770-45), 0, 0, 0);
+                acPolykg10.AddVertexAt(8, new Point2d(X0Y0.X - 15, X0Y0.Y + 14770), 0, 0, 0);
+                acPolykg10.Closed = true;
+
+                acPolykg10.Layer = zmiana_warstwy_tabelka_na_schemat(tabelka.napisy_z_excel_kolor[wiersz, 19]);
+
+                space.AppendEntity(acPolykg10);
+                acTrans.AddNewlyCreatedDBObject(acPolykg10, true);
+
+                Autodesk.AutoCAD.DatabaseServices.Arc acArckg10 = new Autodesk.AutoCAD.DatabaseServices.Arc(
+                   new Point3d(X0Y0.X, X0Y0.Y + 14800 - 60, 0), 60, 0, 3.1415);
+                acArckg10.Layer = zmiana_warstwy_tabelka_na_schemat(tabelka.napisy_z_excel_kolor[wiersz, 19]);
+
+                space.AppendEntity(acArckg10);
+                acTrans.AddNewlyCreatedDBObject(acArckg10, true);
+
+                // //odu
+                Autodesk.AutoCAD.DatabaseServices.Polyline acPolyodu1 = new Autodesk.AutoCAD.DatabaseServices.Polyline();
+                acPolyodu1.SetDatabaseDefaults();
+                acPolyodu1.AddVertexAt(0, new Point2d(X0Y0.X - 480, X0Y0.Y + 14800), 0, 0, 0);
+                acPolyodu1.AddVertexAt(1, new Point2d(X0Y0.X - 480, X0Y0.Y + 14800 + 560), 0, 0, 0);
+                acPolyodu1.AddVertexAt(2, new Point2d(X0Y0.X + 480, X0Y0.Y + 14800 + 560), 0, 0, 0);
+                acPolyodu1.AddVertexAt(3, new Point2d(X0Y0.X + 480, X0Y0.Y + 14800), 0, 0, 0);
+                acPolyodu1.Closed = true;
+                acPolyodu1.Layer = zmiana_warstwy_tabelka_na_schemat(tabelka.napisy_z_excel_kolor[wiersz, 17]);
+
+                space.AppendEntity(acPolyodu1);
+                acTrans.AddNewlyCreatedDBObject(acPolyodu1, true);
+
+                Ellipse acEllipseodu1 = new Ellipse(new Point3d(X0Y0.X , X0Y0.Y + 14800 + 560 + 40, 0), 40 * Vector3d.ZAxis, 160 * Vector3d.XAxis, 0.25, 0, 360 * Math.Atan(1.0) / 45.0);
+                acEllipseodu1.Layer = zmiana_warstwy_tabelka_na_schemat(tabelka.napisy_z_excel_kolor[wiersz, 3]);
+                
+                space.AppendEntity(acEllipseodu1);
+                acTrans.AddNewlyCreatedDBObject(acEllipseodu1, true);
+
+                //odu
+                MText acMTextodu1 = new MText();
+                acMTextodu1.SetDatabaseDefaults();
+                acMTextodu1.Rotation = 0;
+                acMTextodu1.Attachment = AttachmentPoint.BottomCenter;
+
+                acMTextodu1.Location = new Point3d(X0Y0.X , X0Y0.Y + 14800+170, 0);
+                acMTextodu1.Contents = "ODU";
+                acMTextodu1.TextHeight = 250;
+                acMTextodu1.Layer = zmiana_warstwy_tabelka_na_schemat(tabelka.napisy_z_excel_kolor[wiersz, 17]);
+
+                space.AppendEntity(acMTextodu1);
+                acTrans.AddNewlyCreatedDBObject(acMTextodu1, true);
+
+                //holaiter
+                Autodesk.AutoCAD.DatabaseServices.Polyline acPolyhol1 = new Autodesk.AutoCAD.DatabaseServices.Polyline();
+                acPolyhol1.SetDatabaseDefaults();
+                acPolyhol1.AddVertexAt(0, new Point2d(X0Y0.X , X0Y0.Y + 14800 + 560), 0, 0, 0);
+                acPolyhol1.AddVertexAt(1, new Point2d(X0Y0.X , X0Y0.Y + 14800 + 3220), 0, 0, 0);
+                acPolyhol1.AddVertexAt(2, new Point2d(X0Y0.X + 1470, X0Y0.Y + 14800 + 3220), 0, 0, 0);
+
+                acPolyhol1.Layer = zmiana_warstwy_tabelka_na_schemat(tabelka.napisy_z_excel_kolor[wiersz, 13]);
+                space.AppendEntity(acPolyhol1);
+                acTrans.AddNewlyCreatedDBObject(acPolyhol1, true);
+
+                Ellipse acEllipserifu = new Ellipse(new Point3d(X0Y0.X + 1440, X0Y0.Y + 14800 + 3220-40, 0), 40 * Vector3d.ZAxis, 160 * Vector3d.YAxis, 0.25, 0, 360 * Math.Atan(1.0) / 45.0);
+                acEllipserifu.Layer = zmiana_warstwy_tabelka_na_schemat(tabelka.napisy_z_excel_kolor[wiersz, 3]);
+                
+                space.AppendEntity(acEllipserifu);
+                acTrans.AddNewlyCreatedDBObject(acEllipserifu, true);
+                
+
+                //holl
+                MText acMTexthol1 = new MText();
+                acMTexthol1.SetDatabaseDefaults();
+                acMTexthol1.Rotation = Math.PI / 2;
+                acMTexthol1.Attachment = AttachmentPoint.MiddleLeft;
+                acMTexthol1.Location = new Point3d(X0Y0.X, X0Y0.Y + 14800+1230, 0);
+                acMTexthol1.Contents = "Hohlleiter\nL=" + tabelka.napisy_z_excel[wiersz, 14] + " m";
+                acMTexthol1.TextHeight = 250;
+                acMTexthol1.Layer = zmiana_warstwy_tabelka_na_schemat(tabelka.napisy_z_excel_kolor[wiersz, 14]);
+
+                space.AppendEntity(acMTexthol1);
+                acTrans.AddNewlyCreatedDBObject(acMTexthol1, true);
+
+                //antena
+                Autodesk.AutoCAD.DatabaseServices.Arc acArcant1 = new Autodesk.AutoCAD.DatabaseServices.Arc(
+                    new Point3d(X0Y0.X + 1470 + 1050, X0Y0.Y + 14800 + 3220-40, 0), 1010, 3.1415 / 2, 3.1415 * 1.5);
+                acArcant1.Layer = zmiana_warstwy_tabelka_na_schemat(tabelka.napisy_z_excel_kolor[wiersz, 3]);
+
+                space.AppendEntity(acArcant1);
+                acTrans.AddNewlyCreatedDBObject(acArcant1, true);
+
+                Autodesk.AutoCAD.DatabaseServices.Line aclineAnt1 = new Line(acArcant1.StartPoint, acArcant1.EndPoint);
+                aclineAnt1.Layer = zmiana_warstwy_tabelka_na_schemat(tabelka.napisy_z_excel_kolor[wiersz, 3]);
+
+                space.AppendEntity(aclineAnt1);
+                acTrans.AddNewlyCreatedDBObject(aclineAnt1, true);
+
+                 //rifu
+
+                 MText acMText4 = new MText();
+                 acMText4.SetDatabaseDefaults();
+                 acMText4.Rotation = Math.PI / 2;
+                 acMText4.Attachment = AttachmentPoint.MiddleCenter;
+                 acMText4.Location = new Point3d(X0Y0.X +2000, X0Y0.Y + 14800 + 3220 - 40, 0);
+                 acMText4.Contents = "Rifu %%c" + tabelka.napisy_z_excel[wiersz, 3];
+                 acMText4.TextHeight = 250;
+                 acMText4.Layer = zmiana_warstwy_tabelka_na_schemat(tabelka.napisy_z_excel_kolor[wiersz, 3]);
+
+                space.AppendEntity(acMText4);
+                acTrans.AddNewlyCreatedDBObject(acMText4, true);
+
+                //rifu opis
+
+                MText acMText5 = new MText();
+                 acMText5.SetDatabaseDefaults();
+                 acMText5.Rotation = 0;
+                 acMText5.Attachment = AttachmentPoint.BottomCenter;
+
+                 acMText5.Location = new Point3d(X0Y0.X + 1300, X0Y0.Y + 19700, 0);
+                 acMText5.Contents = tabelka.napisy_z_excel[wiersz, 1] + ", " + tabelka.napisy_z_excel[wiersz, 8];
+                 acMText5.TextHeight = 250;
+                 acMText5.Layer = zmiana_warstwy_tabelka_na_schemat(tabelka.napisy_z_excel_kolor[wiersz, 3]);
+
+                space.AppendEntity(acMText5);
+                acTrans.AddNewlyCreatedDBObject(acMText5, true);
+
+
+
+
+
+                Autodesk.AutoCAD.DatabaseServices.Polyline acPolyk20 = new Autodesk.AutoCAD.DatabaseServices.Polyline();
+                Autodesk.AutoCAD.DatabaseServices.Polyline acPolykg20 = new Autodesk.AutoCAD.DatabaseServices.Polyline();
+                Ellipse acEllipseodu2 = new Ellipse();
+
+                if (tabelka.napisy_z_excel[wiersz, 18]=="2")
+                {
+                    //rysuj drugie odu 
+
+
+                    // RG8 1   
+                    Line acline2 = new Line(new Point3d(X0Y0.X+1000, X0Y0.Y + 0, 0), new Point3d(X0Y0.X+1000, X0Y0.Y + 14800, 0));
+                    acline2.Layer = zmiana_warstwy_tabelka_na_schemat(tabelka.napisy_z_excel_kolor[wiersz, 22]);
+
+                    space.AppendEntity(acline2);
+                    acTrans.AddNewlyCreatedDBObject(acline2, true);
+
+                    MText acMText2 = new MText();
+                    acMText2.SetDatabaseDefaults();
+                    acMText2.Rotation = Math.PI / 2;
+                    acMText2.Attachment = AttachmentPoint.MiddleLeft;
+                    acMText2.Location = new Point3d(X0Y0.X+1000, X0Y0.Y + 8800, 0);
+                    acMText2.Contents = tabelka.napisy_z_excel[wiersz, 19] + "-Kabel\nL=" + tabelka.napisy_z_excel[wiersz, 21] + " m";
+                    acMText2.TextHeight = 250;
+                    acMText2.Layer = zmiana_warstwy_tabelka_na_schemat(tabelka.napisy_z_excel_kolor[wiersz, 19]);
+
+                    space.AppendEntity(acMText2);
+                    acTrans.AddNewlyCreatedDBObject(acMText2, true);
+
+
+                    
+                    acPolyk20.SetDatabaseDefaults();
+                    acPolyk20.AddVertexAt(0, new Point2d(X0Y0.X+1000, X0Y0.Y + 120 + 30), 0, 0, 0);
+                    acPolyk20.AddVertexAt(1, new Point2d(X0Y0.X + 30+1000, X0Y0.Y + 120 + 30), 0, 0, 0);
+                    acPolyk20.AddVertexAt(2, new Point2d(X0Y0.X + 30+1000, X0Y0.Y + 45 + 30), 0, 0, 0);
+                    acPolyk20.AddVertexAt(3, new Point2d(X0Y0.X + 15+1000, X0Y0.Y + 45 + 30), 0, 0, 0);
+                    acPolyk20.AddVertexAt(4, new Point2d(X0Y0.X + 15+1000, X0Y0.Y + 30), 0, 0, 0);
+                    acPolyk20.AddVertexAt(5, new Point2d(X0Y0.X - 15+1000, X0Y0.Y + 30), 0, 0, 0);
+                    acPolyk20.AddVertexAt(6, new Point2d(X0Y0.X - 15+1000, X0Y0.Y + 45 + 30), 0, 0, 0);
+                    acPolyk20.AddVertexAt(7, new Point2d(X0Y0.X - 30+1000, X0Y0.Y + 45 + 30), 0, 0, 0);
+                    acPolyk20.AddVertexAt(8, new Point2d(X0Y0.X - 30+1000, X0Y0.Y + 120 + 30), 0, 0, 0);
+                    acPolyk20.Closed = true;
+                    acPolyk20.Layer = zmiana_warstwy_tabelka_na_schemat(tabelka.napisy_z_excel_kolor[wiersz, 19]);
+
+                    space.AppendEntity(acPolyk20);
+                    acTrans.AddNewlyCreatedDBObject(acPolyk20, true);
+
+
+                    Autodesk.AutoCAD.DatabaseServices.Arc acArck20 = new Autodesk.AutoCAD.DatabaseServices.Arc(
+                       new Point3d(X0Y0.X+1000, X0Y0.Y + 60, 0), 60, 3.1415, 0);
+                    acArck20.Layer = zmiana_warstwy_tabelka_na_schemat(tabelka.napisy_z_excel_kolor[wiersz, 19]);
+
+                    space.AppendEntity(acArck20);
+                    acTrans.AddNewlyCreatedDBObject(acArck20, true);
+
+
+                    
+                    acPolykg20.SetDatabaseDefaults();
+                    acPolykg20.AddVertexAt(0, new Point2d(X0Y0.X + 1000, X0Y0.Y + 14770), 0, 0, 0);
+                    acPolykg20.AddVertexAt(1, new Point2d(X0Y0.X + 15 + 1000, X0Y0.Y + 14770), 0, 0, 0);
+                    acPolykg20.AddVertexAt(2, new Point2d(X0Y0.X + 15 + 1000, X0Y0.Y + 14770 - 45), 0, 0, 0);
+                    acPolykg20.AddVertexAt(3, new Point2d(X0Y0.X + 30 + 1000, X0Y0.Y + +14770 - 45), 0, 0, 0);
+                    acPolykg20.AddVertexAt(4, new Point2d(X0Y0.X + 30 + 1000, X0Y0.Y + 14770 - 120), 0, 0, 0);
+                    acPolykg20.AddVertexAt(5, new Point2d(X0Y0.X - 30 + 1000, X0Y0.Y + 14770 - 120), 0, 0, 0);
+                    acPolykg20.AddVertexAt(6, new Point2d(X0Y0.X - 30 + 1000, X0Y0.Y + 14770 - 45), 0, 0, 0);
+                    acPolykg20.AddVertexAt(7, new Point2d(X0Y0.X - 15 + 1000, X0Y0.Y + +14770 - 45), 0, 0, 0);
+                    acPolykg20.AddVertexAt(8, new Point2d(X0Y0.X - 15 + 1000, X0Y0.Y + 14770), 0, 0, 0);
+                    acPolykg20.Closed = true;
+
+                    acPolykg20.Layer = zmiana_warstwy_tabelka_na_schemat(tabelka.napisy_z_excel_kolor[wiersz, 19]);
+
+                    space.AppendEntity(acPolykg20);
+                    acTrans.AddNewlyCreatedDBObject(acPolykg20, true);
+
+                    Autodesk.AutoCAD.DatabaseServices.Arc acArckg20 = new Autodesk.AutoCAD.DatabaseServices.Arc(
+                       new Point3d(X0Y0.X+1000, X0Y0.Y + 14800 - 60, 0), 60, 0, 3.1415);
+                    acArckg20.Layer = zmiana_warstwy_tabelka_na_schemat(tabelka.napisy_z_excel_kolor[wiersz, 19]);
+
+                    space.AppendEntity(acArckg20);
+                    acTrans.AddNewlyCreatedDBObject(acArckg20, true);
+
+                    // //odu
+                    Autodesk.AutoCAD.DatabaseServices.Polyline acPolyodu2 = new Autodesk.AutoCAD.DatabaseServices.Polyline();
+                    acPolyodu2.SetDatabaseDefaults();
+                    acPolyodu2.AddVertexAt(0, new Point2d(X0Y0.X - 480+1000, X0Y0.Y + 14800), 0, 0, 0);
+                    acPolyodu2.AddVertexAt(1, new Point2d(X0Y0.X - 480+1000, X0Y0.Y + 14800 + 560), 0, 0, 0);
+                    acPolyodu2.AddVertexAt(2, new Point2d(X0Y0.X + 480+1000, X0Y0.Y + 14800 + 560), 0, 0, 0);
+                    acPolyodu2.AddVertexAt(3, new Point2d(X0Y0.X + 480+1000, X0Y0.Y + 14800), 0, 0, 0);
+                    acPolyodu2.Closed = true;
+                    acPolyodu2.Layer = zmiana_warstwy_tabelka_na_schemat(tabelka.napisy_z_excel_kolor[wiersz, 17]);
+
+                    space.AppendEntity(acPolyodu2);
+                    acTrans.AddNewlyCreatedDBObject(acPolyodu2, true);
+
+                    acEllipseodu2 = new Ellipse(new Point3d(X0Y0.X+1000, X0Y0.Y + 14800 + 560 + 40, 0), 40 * Vector3d.ZAxis, 160 * Vector3d.XAxis, 0.25, 0, 360 * Math.Atan(1.0) / 45.0);
+                    acEllipseodu2.Layer = zmiana_warstwy_tabelka_na_schemat(tabelka.napisy_z_excel_kolor[wiersz, 3]);
+
+                    space.AppendEntity(acEllipseodu2);
+                    acTrans.AddNewlyCreatedDBObject(acEllipseodu2, true);
+
+                    //odu
+                    MText acMTextodu2 = new MText();
+                    acMTextodu2.SetDatabaseDefaults();
+                    acMTextodu2.Rotation = 0;
+                    acMTextodu2.Attachment = AttachmentPoint.BottomCenter;
+
+                    acMTextodu2.Location = new Point3d(X0Y0.X+1000, X0Y0.Y + 14800 + 170, 0);
+                    acMTextodu2.Contents = "ODU";
+                    acMTextodu2.TextHeight = 250;
+                    acMTextodu2.Layer = zmiana_warstwy_tabelka_na_schemat(tabelka.napisy_z_excel_kolor[wiersz, 17]);
+
+                    space.AppendEntity(acMTextodu2);
+                    acTrans.AddNewlyCreatedDBObject(acMTextodu2, true);
+
+                    //holaiter
+                    Autodesk.AutoCAD.DatabaseServices.Polyline acPolyhol2 = new Autodesk.AutoCAD.DatabaseServices.Polyline();
+                    acPolyhol2.SetDatabaseDefaults();
+                    acPolyhol2.AddVertexAt(0, new Point2d(X0Y0.X+1000, X0Y0.Y + 14800 + 560), 0, 0, 0);
+                    acPolyhol2.AddVertexAt(1, new Point2d(X0Y0.X+1000, X0Y0.Y + 14800 + 3120), 0, 0, 0);
+                    acPolyhol2.AddVertexAt(2, new Point2d(X0Y0.X+ 1470, X0Y0.Y + 14800 + 3120), 0, 0, 0);
+
+                    acPolyhol2.Layer = zmiana_warstwy_tabelka_na_schemat(tabelka.napisy_z_excel_kolor[wiersz, 13]);
+                    space.AppendEntity(acPolyhol2);
+                    acTrans.AddNewlyCreatedDBObject(acPolyhol2, true);
+
+                    //holl
+                    MText acMTexthol2 = new MText();
+                    acMTexthol2.SetDatabaseDefaults();
+                    acMTexthol2.Rotation = Math.PI / 2;
+                    acMTexthol2.Attachment = AttachmentPoint.MiddleLeft;
+                    acMTexthol2.Location = new Point3d(X0Y0.X+1000, X0Y0.Y + 14800 + 1230, 0);
+                    acMTexthol2.Contents = "Hohlleiter\nL=" + tabelka.napisy_z_excel[wiersz, 14] + " m";
+                    acMTexthol2.TextHeight = 250;
+                    acMTexthol2.Layer = zmiana_warstwy_tabelka_na_schemat(tabelka.napisy_z_excel_kolor[wiersz, 14]);
+
+                    space.AppendEntity(acMTexthol2);
+                    acTrans.AddNewlyCreatedDBObject(acMTexthol2, true);
+                }
+
+
+
+
+
+                acTrans.Commit();
+
+                 Hatch_object(acEllipseodu1.ObjectId, acEllipseodu1.Layer);
+
+                HatchPolyLine(acPolyk10.ObjectId, acPolyk10.Layer);
+
+                HatchPolyLine(acPolykg10.ObjectId, acPolyk10.Layer);
+
+                Hatch_object(acEllipserifu.ObjectId, acEllipserifu.Layer);
+              
+
+                if (tabelka.napisy_z_excel[wiersz, 18] == "2")
+                {
+                    Hatch_object(acEllipseodu2.ObjectId, acEllipseodu2.Layer);
+                    HatchPolyLine(acPolyk20.ObjectId, acPolyk20.Layer);
+                    HatchPolyLine(acPolykg20.ObjectId, acPolykg20.Layer);
+                }
+
+                
+            }
+
+
+        }
 
         private string zmiana_warstwy_tabelka_na_schemat(string wartwa_in)
         {
