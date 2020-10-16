@@ -83,19 +83,104 @@ namespace JPP
         public void JPP_HKT_schemat()
         {
             _JPP.HKT_class hKT = new _JPP.HKT_class();
-            hKT.KHT_schemat();
-
+            hKT.rysuj_schemat();
         }
 
-
-        [CommandMethod("JPP_HKT_schemat_rys")]
-        public void JPP_HKT_schemat_rys()
+        [CommandMethod("JPP_HKT_schemat1")]
+        public void JPP_HKT_schemat1()
         {
             _JPP.HKT_class hKT = new _JPP.HKT_class();
-
-           // hKT.rysuj_schemat_rifu_80(new Point3d(100,100,0),   );
-
+            hKT.rysuj_schematpoj(1);
         }
+
+        [CommandMethod("JPP_HKT_schemat2")]
+        public void JPP_HKT_schemat2()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.rysuj_schematpoj(2);
+        }
+
+        [CommandMethod("JPP_HKT_schemat3")]
+        public void JPP_HKT_schemat3()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.rysuj_schematpoj(3);
+        }
+
+        [CommandMethod("JPP_HKT_schemat4")]
+        public void JPP_HKT_schemat4()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.rysuj_schematpoj(4);
+        }
+
+        [CommandMethod("JPP_HKT_schemat5")]
+        public void JPP_HKT_schemat5()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.rysuj_schematpoj(5);
+        }
+        [CommandMethod("JPP_HKT_schemat6")]
+        public void JPP_HKT_schemat6()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.rysuj_schematpoj(6);
+        }
+        [CommandMethod("JPP_HKT_schemat7")]
+        public void JPP_HKT_schemat7()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.rysuj_schematpoj(7);
+        }
+        [CommandMethod("JPP_HKT_schemat8")]
+        public void JPP_HKT_schemat8()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.rysuj_schematpoj(8);
+        }
+        [CommandMethod("JPP_HKT_schemat9")]
+        public void JPP_HKT_schemat9()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.rysuj_schematpoj(9);
+        }
+
+
+
+        /// odczyt napisów z tabeli exela - konkretny format
+        [CommandMethod("JPP_HKT_RLzexcel")]
+        public void JPP_HKT_RLzexcel()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.HKT_odczyt_z_excel();
+        }
+
+
+        /// odczyt napisów z tabeli z CAD - konkretny format
+        [CommandMethod("JPP_HKT_RLzcad")]
+        public void JPP_HKT_RLzcad()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.JPP_HKT_RLzcad();
+        }
+
+        [CommandMethod("JPP_HKT_czysc_properties_jpp")]
+        public void JPP_HKT_czysc_properties_jpp()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.HKT_czysc_properties_jpp();
+        }
+        [CommandMethod("JPP_HKT_sprawdz_properties_jpp")]
+        public void JPP_HKT_sprawdz_properties_jpp()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.HKT_sprawdz_properties_jpp();
+        }
+
+
+
+
+
 
 
     }
