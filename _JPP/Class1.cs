@@ -177,10 +177,19 @@ namespace JPP
             hKT.HKT_sprawdz_properties_jpp();
         }
 
+        [CommandMethod("JPP_HKT_pobierz_kierunek_polnocy")]
+        public void pobierz_kierunek_polnocy()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.pobierz_kierunek_polnocy();
+        }
 
-
-
-
+        [CommandMethod("JPP_HKT_rzuty_radiolinii_all")]
+        public void JPP_HKT_rzuty_radiolinii_all()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.generuj_rzuty_radiolinii();
+        }
 
 
     }
