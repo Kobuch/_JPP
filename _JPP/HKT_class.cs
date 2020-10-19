@@ -22,6 +22,7 @@ namespace _JPP
     {
         ExcelAll excelAll;
         Tabelka tabelka=new Tabelka();
+        Obsluga_prop_cad obsluga_Prop_Cad = new Obsluga_prop_cad();
 
         public void KHT_odczyt_tabeli29kol()
         {
@@ -1026,7 +1027,12 @@ namespace _JPP
 
         public void HKT_sprawdz_properties_jpp()
         {
-            //TODO
+
+            //todo
+            List<tabelkapokaz> tabelkapokazs = obsluga_Prop_Cad.odczyt_properties_dotabelkipokaz();
+            tabelka = obsluga_Prop_Cad.odczyt_properties();
+            UserControl1 userControl1 = new UserControl1(tabelkapokazs, tabelka);
+            userControl1.Show();
         }
 
 
@@ -1162,6 +1168,10 @@ namespace _JPP
                 Tabelka tabelka_tmp = new Tabelka();
                 tabelka_tmp.ilewierszy = Convert.ToInt32(GetCustomProperty("JPP-ile_wierszy"));
                 tabelka_tmp.ilekolumn = Convert.ToInt32(GetCustomProperty("JPP-ile_kolumn"));
+                tabelka_tmp.kierpolnocy_deg = GetCustomProperty("JPP-PN_deg");
+                tabelka_tmp.kierpolnocy_rad = GetCustomProperty("JPP-PN_rad");
+
+
 
 
                 if ((tabelka_tmp.ilewierszy != null) && (tabelka_tmp.ilekolumn != null))
@@ -1181,6 +1191,65 @@ namespace _JPP
 
 
             }
+
+            public List<tabelkapokaz> odczyt_properties_dotabelkipokaz()
+            {
+                Tabelka tabelka_tmp = new Tabelka();
+                tabelka_tmp.ilewierszy = Convert.ToInt32(GetCustomProperty("JPP-ile_wierszy"));
+                tabelka_tmp.ilekolumn = Convert.ToInt32(GetCustomProperty("JPP-ile_kolumn"));
+                List<tabelkapokaz> listapokaz_tmp = new List<tabelkapokaz>();
+                
+
+                if ((tabelka_tmp.ilewierszy != null) && (tabelka_tmp.ilekolumn != null))
+                {
+                    for (int w = 1; w <= tabelka_tmp.ilewierszy; w++)
+                    {
+                        if (tabelka_tmp.ilekolumn==29)
+                        {
+                            tabelkapokaz tabelkapok = new tabelkapokaz();
+                            tabelkapok.RIFU_NR= GetCustomProperty("JPP-W" + w + "K1");
+                            tabelkapok.NETZ= GetCustomProperty("JPP-W" + w + "K2");
+                            tabelkapok.RIFU= GetCustomProperty("JPP-W" + w + "K3");
+                            tabelkapok.AUFBAU= GetCustomProperty("JPP-W" + w + "K4");
+                            tabelkapok.OPTION= GetCustomProperty("JPP-W" + w + "K5");
+                            tabelkapok.FREQUENZ= GetCustomProperty("JPP-W" + w + "K6");
+                            tabelkapok.Farbe= GetCustomProperty("JPP-W" + w + "K7");
+                            tabelkapok.RICHTUNG= GetCustomProperty("JPP-W" + w + "K8");
+                            tabelkapok.HÖHE= GetCustomProperty("JPP-W" + w + "K9");
+                            tabelkapok.GEGENSTELLE= GetCustomProperty("JPP-W" + w + "K10");
+                            tabelkapok.Linknummer= GetCustomProperty("JPP-W" + w + "K11");
+                            tabelkapok.HOHLLEITER_TYP= GetCustomProperty("JPP-W" + w + "K12");
+                            tabelkapok.HOHLLEITER_ANZAHL= GetCustomProperty("JPP-W" + w + "K13");
+                            tabelkapok.HOHLLEITER_LÄNGE= GetCustomProperty("JPP-W" + w + "K14");
+                            tabelkapok.HOHLLEITER_AUFBAU= GetCustomProperty("JPP-W" + w + "K15");
+                            tabelkapok.HOHLLEITER_OPTION= GetCustomProperty("JPP-W" + w + "K16");
+                            tabelkapok.ODU_TYP= GetCustomProperty("JPP-W" + w + "K17");
+                            tabelkapok.ODU_ANZAHL= GetCustomProperty("JPP-W" + w + "K18");
+                            tabelkapok.DATENKABEL_TYP= GetCustomProperty("JPP-W" + w + "K19");
+                            tabelkapok.DATENKABEL_ANZAHL= GetCustomProperty("JPP-W" + w + "K20");
+                            tabelkapok.DATENKABEL_LÄNGE= GetCustomProperty("JPP-W" + w + "K21");
+                            tabelkapok.POWERKABEL_TYP= GetCustomProperty("JPP-W" + w + "K22");
+                            tabelkapok.POWERKABEL_ANZAHL= GetCustomProperty("JPP-W" + w + "K23");
+                            tabelkapok.POWERKABEL_LÄNGE= GetCustomProperty("JPP-W" + w + "K24");
+                            tabelkapok.EISSCHUTZ= GetCustomProperty("JPP-W" + w + "K25");
+                            tabelkapok.STATI_VERDREHUNG= GetCustomProperty("JPP-W" + w + "K26");
+                            tabelkapok.ANT_TAEGER_NR= GetCustomProperty("JPP-W" + w + "K27");
+                            tabelkapok.ANT_TÄGER_DURCHM= GetCustomProperty("JPP-W" + w + "K28");
+                            tabelkapok.BEMERKUNG= GetCustomProperty("JPP-W" + w + "K29");
+
+
+
+
+                                                   
+                            listapokaz_tmp.Add(tabelkapok);
+                        }
+
+
+                    }
+                }
+                return listapokaz_tmp;
+                 }
+
 
             public void czysc_properties()
             {
@@ -1273,6 +1342,10 @@ namespace _JPP
 
             public int ilekolumn = 0;
             public int ilewierszy = 0;
+            
+            public string kierpolnocy_deg ="";
+            public string kierpolnocy_rad = "";
+
 
             public string[,] napisy_z_excel = new string[20, 30];
             public string[,] napisy_z_excel_kolor = new string[20, 30];
@@ -1586,7 +1659,39 @@ namespace _JPP
             }
         }
 
-
+        public class tabelkapokaz
+        {
+           
+            public string RIFU_NR { get; set; }
+            public string NETZ { get; set; }
+            public string RIFU { get; set; }
+            public string AUFBAU { get; set; }
+            public string OPTION { get; set; }
+            public string FREQUENZ { get; set; }
+            public string Farbe { get; set; }
+            public string RICHTUNG { get; set; }
+            public string HÖHE { get; set; }
+            public string GEGENSTELLE { get; set; }
+            public string Linknummer { get; set; }
+            public string HOHLLEITER_TYP { get; set; }
+            public string HOHLLEITER_ANZAHL { get; set; }
+            public string HOHLLEITER_LÄNGE { get; set; }
+            public string HOHLLEITER_AUFBAU { get; set; }
+            public string HOHLLEITER_OPTION { get; set; }
+            public string ODU_TYP { get; set; }
+            public string ODU_ANZAHL { get; set; }
+            public string DATENKABEL_TYP { get; set; }
+            public string DATENKABEL_ANZAHL { get; set; }
+            public string DATENKABEL_LÄNGE { get; set; }
+            public string POWERKABEL_TYP { get; set; }
+            public string POWERKABEL_ANZAHL { get; set; }
+            public string POWERKABEL_LÄNGE { get; set; }
+            public string EISSCHUTZ { get; set; }
+            public string STATI_VERDREHUNG { get; set; }
+            public string ANT_TAEGER_NR { get; set; }
+            public string ANT_TÄGER_DURCHM { get; set; }
+            public string BEMERKUNG { get; set; }
+          }
 
 
 
