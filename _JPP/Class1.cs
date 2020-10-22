@@ -188,8 +188,73 @@ namespace JPP
         public void JPP_HKT_rzuty_radiolinii_all()
         {
             _JPP.HKT_class hKT = new _JPP.HKT_class();
-            hKT.generuj_rzuty_radiolinii();
+            hKT.generuj_rzut_wszystkich_radiolinii();
         }
+
+        [CommandMethod("JPP_HKT_rzuty_radiolinii1")]
+        public void JPP_HKT_rzuty_radiolinii1()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.generuj_rzut_1radiolinii(1);
+        }
+
+
+        [CommandMethod("JPP_HKT_rzuty_radiolinii2")]
+        public void JPP_HKT_rzuty_radiolinii2()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.generuj_rzut_1radiolinii(2);
+        }
+
+        [CommandMethod("JPP_HKT_rzuty_radiolinii3")]
+        public void JPP_HKT_rzuty_radiolinii3()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.generuj_rzut_1radiolinii(3);
+        }
+
+        [CommandMethod("JPP_HKT_rzuty_radiolinii4")]
+        public void JPP_HKT_rzuty_radiolinii4()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.generuj_rzut_1radiolinii(4);
+        }
+
+       
+        [CommandMethod("JPP_HKT_rzuty_radiolinii5")]
+        public void JPP_HKT_rzuty_radiolinii5()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.generuj_rzut_1radiolinii(5);
+        }
+
+        [CommandMethod("JPP_HKT_rzuty_radiolinii6")]
+        public void JPP_HKT_rzuty_radiolinii6()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.generuj_rzut_1radiolinii(6);
+        }
+
+        [CommandMethod("JPP_HKT_rzuty_radiolinii7")]
+        public void JPP_HKT_rzuty_radiolinii7()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.generuj_rzut_1radiolinii(7);
+        }
+
+        [CommandMethod("JPP_HKT_rzuty_radiolinii8")]
+        public void JPP_HKT_rzuty_radiolinii8()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.generuj_rzut_1radiolinii(8);
+        }
+        [CommandMethod("JPP_HKT_rzuty_radiolinii9")]
+        public void JPP_HKT_rzuty_radiolinii9()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.generuj_rzut_1radiolinii(9);
+        }
+
 
 
     }
