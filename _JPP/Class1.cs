@@ -255,6 +255,20 @@ namespace JPP
             hKT.generuj_rzut_1radiolinii(9);
         }
 
+        [CommandMethod("JPP_HKT_rysuj_tabelke_z_prop")]
+        public void JPP_HKT_rysuj_tabelke_z_prop()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.Rysuj_tabelke_w_cad_z_properties();
+        }
+
+        [CommandMethod("JPP_HKT_tab_zmiana20na29_z_prop")]
+        public void JPP_HKT_tab_zmiana20na29_z_prop()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.tabela_zmiana20na29_z_prop();
+        }
+
 
 
     }
