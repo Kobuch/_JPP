@@ -268,6 +268,13 @@ namespace JPP
             _JPP.HKT_class hKT = new _JPP.HKT_class();
             hKT.tabela_zmiana20na29_z_prop();
         }
+        [CommandMethod("JPP_HKT_roza_wiatrow_Rifu")]
+        public void JPP_HKT_roza_wiatrow_Rifu()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.generuj_rzut_rozy_wiatrow();
+        }
+
 
 
 

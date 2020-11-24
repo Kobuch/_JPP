@@ -1558,6 +1558,49 @@ namespace _JPP
             }
         }
 
+        public void generuj_rzut_rozy_wiatrow()
+        {
+
+            Rzuty_radiolinii rzuty_Radiolinii = new Rzuty_radiolinii();
+
+            Obsluga_prop_cad obsluga_Prop_Cad = new Obsluga_prop_cad();
+            tabelka = obsluga_Prop_Cad.odczyt_properties();
+            string PN_text = "";
+            PN_text = obsluga_Prop_Cad.GetCustomProperty("JPP-PN_rad");
+            double PN = Math.PI / 2;
+            if (PN_text != null) PN = Convert.ToDouble(PN_text);
+
+
+            //pobierz wartości położenia
+
+            Document acDoc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
+            Database acCurDb = acDoc.Database;
+
+            using (Transaction acTrans = acCurDb.TransactionManager.StartTransaction())
+            {
+                Editor acDocEd = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
+                Point3d Pointbazowy = acDocEd.GetPoint("\n Wskaż miejsce wstwienia rozy wiatrow").Value;
+
+
+
+                BlockTable acBlkTbl;
+                acBlkTbl = acTrans.GetObject(acCurDb.BlockTableId, OpenMode.ForWrite) as BlockTable;
+
+
+                // odczyt typu anteny  13
+                for (int ant_nr = 1; ant_nr <= tabelka.ilewierszy; ant_nr++)
+                {
+                        rzuty_Radiolinii.rzut_Rifu_rozawiatrow(ant_nr, tabelka, PN, Pointbazowy);
+                    
+
+                }
+                acTrans.Commit();
+
+            }
+        }
+
+
+
         private double ConvertToRadians(double angle)
         {
             return (Math.PI / 180) * angle;
@@ -1868,6 +1911,74 @@ namespace _JPP
                 acTrans.Commit();
             }
         }
+
+
+        public void rzut_Rifu_rozawiatrow(int ant_nr, Tabelka tabelka, double PN, Point3d Pointbazowy)
+        {
+            Document acDoc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
+            Database acCurDb = acDoc.Database;
+
+            using (Transaction acTrans = acCurDb.TransactionManager.StartTransaction())
+            {
+                Editor acDocEd = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
+
+                BlockTable acBlkTbl;
+                acBlkTbl = acTrans.GetObject(acCurDb.BlockTableId, OpenMode.ForWrite) as BlockTable;
+
+                if (!acBlkTbl.Has("Richtungspfeil_dyn"))
+                {
+                    try
+                    {
+                        // search for a dwg file named 'blockName' in AutoCAD search paths
+                        var filename = HostApplicationServices.Current.FindFile("Richtungspfeil_dyn.dwg", acCurDb, FindFileHint.Default);
+                        // add the dwg model space as 'blockName' block definition in the current database block table
+                        using (var sourceDb = new Database(false, true))
+                        {
+                            sourceDb.ReadDwgFile(filename, FileOpenMode.OpenForReadAndAllShare, true, "");
+                            acCurDb.Insert("Richtungspfeil_dyn", sourceDb, true);
+                        }
+                    }
+                    catch
+                    {
+                        acDocEd.WriteMessage($"\nBlock Richtungspfeil_dyn.dwg not found.");
+                        return;
+                    }
+                }
+
+                using (var br = new BlockReference(Pointbazowy, acBlkTbl["Richtungspfeil_dyn"]))
+                {
+
+
+                    br.Rotation = ConvertToRadians(-90 - Convert.ToDouble(tabelka.napisy_z_excel[ant_nr, 8].Replace(",", "."))) + PN;
+                    br.TransformBy(Matrix3d.Scaling(100, Pointbazowy));
+
+                    var space = (BlockTableRecord)acTrans.GetObject(acCurDb.CurrentSpaceId, OpenMode.ForWrite);
+                    space.AppendEntity(br);
+                    acTrans.AddNewlyCreatedDBObject(br, true);
+
+                    //wstaw opis 
+
+                    MText acMText = new MText();
+                    acMText.SetDatabaseDefaults();
+                    acMText.SetAttachmentMovingLocation(AttachmentPoint.MiddleCenter);
+                    double X1 = 3000 * Math.Sin(ConvertToRadians(90 - Convert.ToDouble(tabelka.napisy_z_excel[ant_nr, 8].Replace(",", "."))) + PN);
+                    double Y1 = 3000 * Math.Cos(ConvertToRadians(-90 - Convert.ToDouble(tabelka.napisy_z_excel[ant_nr, 8].Replace(",", "."))) + PN);
+                    acMText.Location = new Point3d( X1 + Pointbazowy.X, Y1+Pointbazowy.Y  , 0);
+                    acMText.ColorIndex = 7;
+                    acMText.Contents = tabelka.napisy_z_excel[ant_nr, 1] + ", %%C" + tabelka.napisy_z_excel[ant_nr, 3] + "\n" + tabelka.napisy_z_excel[ant_nr, 8] + "%%d";
+                    acMText.TextHeight = 200;
+                    acMText.Rotation = ConvertToRadians(180 - Convert.ToDouble(tabelka.napisy_z_excel[ant_nr, 8].Replace(",", "."))) + PN;
+
+
+                    space.AppendEntity(acMText);
+                    acTrans.AddNewlyCreatedDBObject(acMText, true);
+                }
+                acTrans.Commit();
+            }
+        }
+
+
+
 
         private string zmiana_warstwy_tabelka_na_rzutach(string wartwa_in, bool czy_text)
         {
