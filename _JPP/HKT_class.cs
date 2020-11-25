@@ -33,8 +33,8 @@ namespace _JPP
                 //  Application.ShowAlertDialog("Wskaż rogi tabekli wg opisu \n 1 - gornylewy róg wartości " +
                 //                              "\n 2 - dolnyprawy róg wartości");
 
-                tabelka.punkt1 = acDocEd.GetPoint("\n Wskaż punkt 1 - gornylewy róg wartości").Value;
-                tabelka.punkt2 = acDocEd.GetPoint("\n Wskaż punkt 2 - dolnyprawy róg wartości").Value;
+                tabelka.punkt1 = acDocEd.GetPoint("\n Wskaż punkt 1 - dolny lewy róg wartości").Value;
+                tabelka.punkt2 = acDocEd.GetPoint("\n Wskaż punkt 2 - górny prawy róg wartości").Value;
                 string[,] listaatrybutow = new string[2, 30];
 
                 //wybor oknem automatycznym
@@ -1295,11 +1295,52 @@ namespace _JPP
                     obsluga_Prop_Cad.setDwgProp("JPP-LayerW" + w + "K" + k, tabelka.napisy_z_excel_kolor[w, k]);
 
                 }
+                //dla jakich kolumn robimy zmiany
+                //kolumna 3 dla obu tabel to srednica
+                // dla tabeli 20kolumnowej azymut to 7 kolumna dla tameli 29kolumnowej to 8 kolumna
+                obsluga_Prop_Cad.setDwgProp("JPP-W" + w + "K3", czysc_liczbe_z_char(obsluga_Prop_Cad.GetCustomProperty("JPP-W" + w + "K3")));
+                if (tabelka.ilekolumn == 29)
+                {
+                    obsluga_Prop_Cad.setDwgProp("JPP-W" + w + "K8", czysc_liczbe_z_char(obsluga_Prop_Cad.GetCustomProperty("JPP-W" + w + "K8")));
+                }
+
+                if (tabelka.ilekolumn == 20)
+                {
+                    obsluga_Prop_Cad.setDwgProp("JPP-W" + w + "K7", czysc_liczbe_z_char(obsluga_Prop_Cad.GetCustomProperty("JPP-W" + w + "K7")));
+
+                }
+
+
+
             }
             obsluga_Prop_Cad.setDwgProp("JPP-ile_wierszy", tabelka.ilewierszy.ToString()); ;
             obsluga_Prop_Cad.setDwgProp("JPP-ile_kolumn", tabelka.ilekolumn.ToString());
             //}
         }
+
+        /// <summary>
+        /// czysci string zostawiajac tylkoo wartości liczbowe
+        /// </summary>
+        /// <param name="liczba_str"></param>
+        /// <returns></returns>
+        private string czysc_liczbe_z_char(string liczba_str)
+        {
+            string numericString = string.Empty;
+
+            foreach (var c in liczba_str)
+            {
+                // Check for numeric characters (hex in this case) or leading or trailing spaces.
+                if ((c >= '0' && c <= '9') || (c == '.') || (c == ','))
+                {
+                    numericString = string.Concat(numericString, c.ToString());
+                }
+                
+            }
+            return numericString;
+        }
+
+
+
 
         public void HKT_czysc_properties_jpp()
         {
@@ -1951,7 +1992,7 @@ namespace _JPP
 
                     br.Rotation = ConvertToRadians(-90 - Convert.ToDouble(tabelka.napisy_z_excel[ant_nr, 8].Replace(",", "."))) + PN;
                     br.TransformBy(Matrix3d.Scaling(100, Pointbazowy));
-
+                    br.Layer = tabelka.napisy_z_excel_kolor[ant_nr, 8];
                     var space = (BlockTableRecord)acTrans.GetObject(acCurDb.CurrentSpaceId, OpenMode.ForWrite);
                     space.AppendEntity(br);
                     acTrans.AddNewlyCreatedDBObject(br, true);
@@ -1961,13 +2002,29 @@ namespace _JPP
                     MText acMText = new MText();
                     acMText.SetDatabaseDefaults();
                     acMText.SetAttachmentMovingLocation(AttachmentPoint.MiddleCenter);
-                    double X1 = 3000 * Math.Sin(ConvertToRadians(90 - Convert.ToDouble(tabelka.napisy_z_excel[ant_nr, 8].Replace(",", "."))) + PN);
-                    double Y1 = 3000 * Math.Cos(ConvertToRadians(-90 - Convert.ToDouble(tabelka.napisy_z_excel[ant_nr, 8].Replace(",", "."))) + PN);
+                    double Y1 = 3000 * Math.Sin(ConvertToRadians(0 - Convert.ToDouble(tabelka.napisy_z_excel[ant_nr, 8].Replace(",", "."))) + PN);
+                    double X1 = 3000 * Math.Cos(ConvertToRadians(0 - Convert.ToDouble(tabelka.napisy_z_excel[ant_nr, 8].Replace(",", "."))) + PN);
                     acMText.Location = new Point3d( X1 + Pointbazowy.X, Y1+Pointbazowy.Y  , 0);
-                    acMText.ColorIndex = 7;
+                   
                     acMText.Contents = tabelka.napisy_z_excel[ant_nr, 1] + ", %%C" + tabelka.napisy_z_excel[ant_nr, 3] + "\n" + tabelka.napisy_z_excel[ant_nr, 8] + "%%d";
                     acMText.TextHeight = 200;
-                    acMText.Rotation = ConvertToRadians(180 - Convert.ToDouble(tabelka.napisy_z_excel[ant_nr, 8].Replace(",", "."))) + PN;
+                    double obrot = ConvertToRadians(-90 - Convert.ToDouble(tabelka.napisy_z_excel[ant_nr, 8].Replace(",", "."))) + PN;
+
+                    if (br.Rotation >= 0 && br.Rotation < Math.PI)
+                    {
+                        acMText.Rotation = br.Rotation - 0.5 * Math.PI;
+                    }
+                    else
+                    {
+                        acMText.Rotation = br.Rotation + 0.5 * Math.PI;
+                    }
+                    acMText.Layer = tabelka.napisy_z_excel_kolor[ant_nr, 8];
+
+                    //double obrot = ConvertToRadians( - Convert.ToDouble(tabelka.napisy_z_excel[ant_nr, 8].Replace(",", ".")) ) + PN;
+                    ////if ((obrot <0 || obrot>(-Math.PI/2)) && (obrot<(-1.5*Math.PI) || obrot>(-2*Math.PI)))    obrot = obrot - Math.PI; 
+
+
+                    //acMText.Rotation = ConvertToRadians(180 - Convert.ToDouble(tabelka.napisy_z_excel[ant_nr, 8].Replace(",", "."))) + PN;
 
 
                     space.AppendEntity(acMText);
