@@ -26,7 +26,7 @@ namespace _JPP
         private List<tabelkapokaz> tabelkapokazs;
        
         Tabelka tabelka = new Tabelka();
-    
+        Obsluga_prop_cad obsluga_Prop_Cad = new Obsluga_prop_cad();
 
         public UserControl2(  List<tabelkapokaz20> tabelkapokazs20, Tabelka tabelka)
         {
@@ -50,7 +50,7 @@ namespace _JPP
 
         private void zmien20_na29_Click(object sender, RoutedEventArgs e)
         {
-            Obsluga_prop_cad obsluga_Prop_Cad = new Obsluga_prop_cad();
+            
             tabelkapokazs = obsluga_Prop_Cad.przerobtabelepokaz20_na_29(tabelkapokazs20);
 
             dataGrid29.ItemsSource = tabelkapokazs;
@@ -58,6 +58,11 @@ namespace _JPP
 
         }
 
-       
+        private void wykonaj20_na29_Click(object sender, RoutedEventArgs e)
+        {
+           
+            tabelkapokazs = obsluga_Prop_Cad.przerobtabelepokaz20_na_29(tabelkapokazs20);
+            obsluga_Prop_Cad.przerobtabelepokaz20_na_29_zapisz(tabelkapokazs);
+        }
     }
 }

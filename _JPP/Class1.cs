@@ -276,7 +276,12 @@ namespace JPP
         }
 
 
-
+        [CommandMethod("JPP_HKT_akualizacja_Rifu_planowane")]
+        public void JPP_HKT_akualizacja_Rifu_planowane()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.akualizacja_Rifu_planowane();
+        }
 
     }
 }

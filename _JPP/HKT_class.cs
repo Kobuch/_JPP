@@ -6,6 +6,7 @@ using Autodesk.AutoCAD.Runtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Excel = Microsoft.Office.Interop.Excel;
 
 namespace _JPP
@@ -15,6 +16,7 @@ namespace _JPP
     {
         ExcelAll excelAll;
         Tabelka tabelka = new Tabelka();
+        Tabelka_plan tabelka_Plan = new Tabelka_plan();
         Obsluga_prop_cad obsluga_Prop_Cad = new Obsluga_prop_cad();
 
         public void KHT_odczyt_tabeli29kol()
@@ -1359,6 +1361,7 @@ namespace _JPP
             {
                 List<tabelkapokaz20> tabelkapokazs20 = obsluga_Prop_Cad.odczyt_properties_dotabelkipokaz20();
                 UserControl2 userControl2 = new UserControl2(tabelkapokazs20, tabelka);
+              
                 userControl2.Show();
 
             }
@@ -1661,6 +1664,27 @@ namespace _JPP
 
         }
 
+        public void akualizacja_Rifu_planowane()
+        {
+            Obsluga_prop_cad obsluga_Prop_Cad = new Obsluga_prop_cad();
+           //odczyt tabeli z properties cadowego
+            tabelka = obsluga_Prop_Cad.odczyt_properties();
+
+            if (tabelka.ilekolumn == 20)
+            {
+                Autodesk.AutoCAD.ApplicationServices.Application.ShowAlertDialog("W properties zapisano stara tabelkę 20 kolumnową. Musisz ją wczesniej zamienić na nową 20 kolumnowa");
+
+            }
+            else
+            {
+
+                //todo
+                List<tabelkapokaz> tabelkapokazs = obsluga_Prop_Cad.odczyt_properties_dotabelkipokaz();
+
+                UserControl_plan userControl_plan = new UserControl_plan(tabelka);
+                userControl_plan.Show();
+            }
+        }
 
     }
 
@@ -2065,14 +2089,6 @@ namespace _JPP
     }
 
 
-
-
-
-
-
-
-
-
     public class Obsluga_prop_cad
     {
 
@@ -2082,7 +2098,7 @@ namespace _JPP
         public Tabelka odczyt_properties()
         {
             Tabelka tabelka_tmp = new Tabelka();
-            tabelka_tmp.ilewierszy = Convert.ToInt32(GetCustomProperty("JPP-ile_wierszy"));
+            tabelka_tmp.ilewierszy =Convert.ToInt32(GetCustomProperty("JPP-ile_wierszy"));
             tabelka_tmp.ilekolumn = Convert.ToInt32(GetCustomProperty("JPP-ile_kolumn"));
             tabelka_tmp.kierpolnocy_deg = GetCustomProperty("JPP-PN_deg");
             tabelka_tmp.kierpolnocy_rad = GetCustomProperty("JPP-PN_rad");
@@ -2343,21 +2359,34 @@ namespace _JPP
         public string GetCustomProperty(string key)
         {
             Document acDoc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
+           
             Database acCurDb = acDoc.Database;
 
             DatabaseSummaryInfoBuilder sumInfo = new DatabaseSummaryInfoBuilder(acCurDb.SummaryInfo);
             IDictionary custProps = sumInfo.CustomPropertyTable;
-            return (string)custProps[key];
+            var napis = (string)custProps[key];
+            if (!string.IsNullOrEmpty(napis))
+            {
+                string wartosc = string.Copy(napis);
+            
+                return wartosc;
+            }
+
+            else return "";
+
+            //return (string)custProps[key];
         }
 
         public void setDwgProp(string propkey, string propval)
         {
             Document acDoc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
+            acDoc.LockDocument();
             Database acCurDb = acDoc.Database;
             bool jest = false;
 
             IDictionaryEnumerator denum = acCurDb.SummaryInfo.CustomProperties;
-
+          
+           
             while (denum.MoveNext())
             {
                 DictionaryEntry entry = denum.Entry;
@@ -2369,9 +2398,10 @@ namespace _JPP
                     {
                         customProps[entry.Key] = propval;
                         jest = true;
+                       
                     }
 
-                    acCurDb.SummaryInfo = dpbuilder.ToDatabaseSummaryInfo();
+                     acCurDb.SummaryInfo = dpbuilder.ToDatabaseSummaryInfo();
                 }
             }
             if (!jest)
@@ -2381,11 +2411,12 @@ namespace _JPP
                 customProps.Add(propkey, propval);
                 acCurDb.SummaryInfo = dpbuilder.ToDatabaseSummaryInfo();
             }
+
+           
         }
+
+
     }
-
-
-
 
     public class RifuCAD
     {
@@ -3052,6 +3083,60 @@ namespace _JPP
         }
     }
 
+    public class Tabelka_plan
+    {
+
+        public string Lfd_Nr { get; set; }
+        public string USER_LINK_ID        { get; set; }
+        public string NE_A { get; set; }
+        public string Main_Status { get; set; }
+
+        public string Azimuth        { get; set; }
+        public string Typ        { get; set; }
+        public string Diameter        { get; set; }
+        public string Height        { get; set; }
+        public string Trager { get; set; }
+        public string Frequenz        { get; set; }
+        public string Vendor        { get; set; }
+        public string Kapazität        { get; set; }
+        public string System        { get; set; }
+        public string Distance        { get; set; }
+        public string Site_B { get; set; }
+        
+        public string NE_B       { get; set; }
+
+        public Tabelka_plan()
+        { }
+        public Tabelka_plan(string[] wiersz)
+        {
+            if (wiersz.Count() >= 19)
+            {
+
+                Lfd_Nr = wiersz[0];
+                USER_LINK_ID = wiersz[1];
+                NE_A = wiersz[2];
+                Main_Status = wiersz[3];
+
+                Azimuth = wiersz[5];
+                Typ = wiersz[6];
+                Diameter = wiersz[7];
+                Height = wiersz[8];
+                Trager = wiersz[9];
+
+                Frequenz = wiersz[11];
+                Vendor = wiersz[12];
+                Kapazität = wiersz[13];
+                System = wiersz[14];
+
+                Distance = wiersz[16];
+                Site_B = wiersz[17];
+                NE_B = wiersz[18];
+            }
+
+        }
+    }
+
+
     public class tabelkapokaz
     {
 
@@ -3126,8 +3211,6 @@ namespace _JPP
         {
         }
     }
-
-
 
 
     class ExcelAll
