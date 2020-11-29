@@ -20,26 +20,42 @@ namespace _JPP
     /// </summary>
     public partial class UserControl_plan : Window
     {
-    
 
-        Tabelka_plan tabelka_Plan = new Tabelka_plan();
+        Tabelka tabelka;
+        List<tabelkapokaz> tabelkapokazs;
+        Tabelka_plan _tabelka_Plan { get; set; }
+
+        public Tabelka_plan Tabelka_Plan
+            { get { return _tabelka_Plan; }
+          set { _tabelka_Plan = value; }
+        }
+
+
 
         List<Tabelka_plan> _tabelka_Plans { get; set; }
+        List<Tabelka_plan> _tabelka_Plans_tmp { get; set; }
 
 
         List<Tabelka_plan> Tabelka_Plans
         {
             get { return _tabelka_Plans; }
             set { _tabelka_Plans = value; }
-
-
+        }
+        List<Tabelka_plan> Tabelka_Plans_tmp
+        {
+            get { return _tabelka_Plans_tmp; }
+            set { _tabelka_Plans_tmp = value; }
         }
 
-        public UserControl_plan(Tabelka tabelka)
+
+        public UserControl_plan(List<tabelkapokaz> _tabelkapokazs,Tabelka _tabelka)
         {
+
             InitializeComponent();
             Tabelka_Plans = new List<Tabelka_plan>();
-
+            tabelka = _tabelka;
+            tabelkapokazs = _tabelkapokazs;
+            Tabelka_Plan = new Tabelka_plan();
         }
 
 
@@ -93,15 +109,76 @@ namespace _JPP
 
         private void dopasuj_Click(object sender, RoutedEventArgs e)
         {
+           // this.Stak_grid_plan.Visibility = Visibility.Collapsed;
+            this.Stak_grid_dopasuj.Visibility = Visibility.Visible;
+            Stak_grid_dopasuj.DataContext = Tabelka_Plans;
+
+            this.grid_tabelka29.ItemsSource = tabelkapokazs;
+            //  Grid_dopasuj.Items.Refresh();
+
+            Tabelka_Plans_tmp = new List<Tabelka_plan>();
+
+
+            foreach (tabelkapokaz row in tabelkapokazs  )
+            {
+               Double azym_1 =Convert.ToDouble(row.RICHTUNG.Replace(",", "."));
+
+                int czy_jest = Tabelka_Plans.Count(x => Convert.ToDouble(x.Azimuth.Replace(",", ".")) == azym_1);
+
+                if (czy_jest>0)
+                {
+                    Tabelka_plan row2 = Tabelka_Plans.First(x => Convert.ToDouble(x.Azimuth.Replace(",", ".")) == azym_1);
+                    Tabelka_Plans_tmp.Add(row2);
+                    Tabelka_Plans.Remove(row2);
+                }
+                else
+                {
+                    Tabelka_Plans_tmp.Add(new Tabelka_plan());
+                   
+                }
+
+                
+
+            }
+
+                  Tabelka_Plans_tmp.AddRange(Tabelka_Plans);
+
+                Stak_grid_dopasuj.DataContext = Tabelka_Plans_tmp;
+                
 
         }
 
+        private void MyGrid_DragOver(object sender, DragEventArgs e)
+        {
+            DragOver_DragEnter(sender, e);
+
+        }
+
+        private void MyGrid_DragEnter(object sender, DragEventArgs e)
+        {
+            DragOver_DragEnter(sender, e);
+        }
+        private void DragOver_DragEnter(object sender, DragEventArgs e)
+        {
+            // code here to decide whether drag target is ok
+
+            e.Effects = DragDropEffects.None;
+            e.Effects = DragDropEffects.Move;
+            e.Effects = DragDropEffects.Copy;
+            e.Handled = true;
+            return;
+        }
+        private void Grid_dopasuj_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                var aaa = ((DataGrid)sender).SelectedItem;
 
 
-
-
-
-
-
+                var dragSource = this.Grid_dopasuj;
+                var data = aaa;
+                DragDrop.DoDragDrop(dragSource, data, DragDropEffects.Move);
+            }
+        }
     }
 }

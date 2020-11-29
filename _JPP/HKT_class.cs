@@ -1681,7 +1681,7 @@ namespace _JPP
                 //todo
                 List<tabelkapokaz> tabelkapokazs = obsluga_Prop_Cad.odczyt_properties_dotabelkipokaz();
 
-                UserControl_plan userControl_plan = new UserControl_plan(tabelka);
+                UserControl_plan userControl_plan = new UserControl_plan(tabelkapokazs,tabelka);
                 userControl_plan.Show();
             }
         }

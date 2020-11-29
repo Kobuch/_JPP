@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:_JPP"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="1000">
 
 
 
@@ -29,7 +29,41 @@
 
         </StackPanel>
 
-        <DataGrid Grid.Row="2"  x:Name="Grid_plan" HorizontalAlignment="Left" Margin="3" VerticalAlignment="Top"  />
+        <StackPanel Grid.Row="2" >
+        <StackPanel x:Name="Stak_grid_plan" >
+            <DataGrid   x:Name="Grid_plan" HorizontalAlignment="Left" Margin="3" VerticalAlignment="Top"  />
+       </StackPanel>  
+        <StackPanel  x:Name="Stak_grid_dopasuj" Orientation="Horizontal">
+            <DataGrid   x:Name="Grid_dopasuj" 
+                        AllowDrop="True"
+                        SelectedItem="{Binding Tabelka_Plan, Mode=TwoWay}"
+                        DragOver="MyGrid_DragOver"
+                         DragEnter="MyGrid_DragEnter"
+                        MouseMove="Grid_dopasuj_MouseMove"
+                        
+                        Margin="3" VerticalAlignment="Top" FontSize="9" HorizontalAlignment="Left" ItemsSource="{Binding}" AutoGenerateColumns="False" CanUserAddRows="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Lfd_Nr" Width="Auto" Binding="{Binding Lfd_Nr}" />
+                        <DataGridTextColumn Header="Diameter" Width="Auto" Binding="{Binding Diameter}" />
+                        <DataGridTextColumn Header="Frequenz" Width="Auto" Binding="{Binding Frequenz}" />
+                        <DataGridTextColumn Header="Azimuth" Width="Auto" Binding="{Binding Azimuth}" />
+                        <DataGridTextColumn Header="Height" Width="Auto" Binding="{Binding Height}" />
+                        <DataGridTextColumn Header="Gegenstelle" Width="Auto" Binding="{Binding Site_B}" />
+                        <DataGridTextColumn Header="USER_LINK_ID" Width="Auto" Binding="{Binding USER_LINK_ID}" />
+                        <DataGridTextColumn Header="Main_Status" Width="Auto" Binding="{Binding Main_Status}" />
+
+                    </DataGrid.Columns>
+                </DataGrid>
+                <DataGrid x:Name="grid_tabelka29" Margin="3" VerticalAlignment="Top"  FontSize="9" HorizontalAlignment="Left" AutoGenerateColumns="True" CanUserAddRows="True"
+                           >
+                    
+                    
+                    
+                    
+                </DataGrid> 
+            
+            </StackPanel>
+ </StackPanel>
 
     </Grid>
 </Window>
