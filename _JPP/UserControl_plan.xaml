@@ -4,10 +4,18 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:_JPP"
+        xmlns:collections="clr-namespace:System.Collections;assembly=mscorlib"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="1000">
-
-
+    <Window.Resources>
+        
+            <collections:ArrayList x:Key="arrList">
+                <collections:DictionaryEntry Key="A" Value="1"/>
+                <collections:DictionaryEntry Key="M" Value="2"/>
+                <collections:DictionaryEntry Key="B" Value="3"/>
+            </collections:ArrayList>
+    
+    </Window.Resources>
 
     <Grid  x:Name="Grid1"  SelectiveScrollingGrid.SelectiveScrollingOrientation="Both">
         <Grid.RowDefinitions>
@@ -24,7 +32,8 @@
             <Button x:Name="BT_wklej" Content="Wklej ze schowka" Width="150" Height="25" Margin="3" Click="wklej_Click"/>
             <Button x:Name="BT_scal" Content="Scal te same Rifu" Width="150" Height="25" Margin="3" Click="scal_Click"/>
             <Button x:Name="BT_dopasuj" Content="Dopasuj" Width="150" Height="25" Margin="3" Click="dopasuj_Click"/>
-
+            <Button x:Name="BT_akceptuj" Content="Akceptuj" Width="150" Height="25" Margin="3" Click="BT_akceptuj_Click"/>
+            <Button x:Name="BT_zapisz" Content="Zapisz" Width="150" Height="25" Margin="3" Click="BT_zapisz_Click"/>
 
 
         </StackPanel>
@@ -50,14 +59,21 @@
                         <DataGridTextColumn Header="Height" Width="Auto" Binding="{Binding Height}" />
                         <DataGridTextColumn Header="Gegenstelle" Width="Auto" Binding="{Binding Site_B}" />
                         <DataGridTextColumn Header="USER_LINK_ID" Width="Auto" Binding="{Binding USER_LINK_ID}" />
+                        <DataGridTextColumn Header="Ile_odu" Width="Auto" Binding="{Binding Ile_odu}" />
                         <DataGridTextColumn Header="Main_Status" Width="Auto" Binding="{Binding Main_Status}" />
+
+
+                        <DataGridTextColumn Header="Dopasuj" Width="Auto"  Binding="{Binding Dopasuj}"/>
+
+
+
 
                     </DataGrid.Columns>
                 </DataGrid>
-                <DataGrid x:Name="grid_tabelka29" Margin="3" VerticalAlignment="Top"  FontSize="9" HorizontalAlignment="Left" AutoGenerateColumns="True" CanUserAddRows="True"
+                <DataGrid x:Name="grid_tabelka29" Margin="3" VerticalAlignment="Top"  FontSize="9" HorizontalAlignment="Left" AutoGenerateColumns="True" CanUserAddRows="False"
                            >
                     
-                    
+                   
                     
                     
                 </DataGrid> 

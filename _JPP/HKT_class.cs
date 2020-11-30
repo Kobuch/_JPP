@@ -3104,6 +3104,9 @@ namespace _JPP
         public string Site_B { get; set; }
         
         public string NE_B       { get; set; }
+        public string Dopasuj { get; set; }
+        public string Ile_odu { get; set; }
+
 
         public Tabelka_plan()
         { }
@@ -3131,6 +3134,7 @@ namespace _JPP
                 Distance = wiersz[16];
                 Site_B = wiersz[17];
                 NE_B = wiersz[18];
+                
             }
 
         }

@@ -25,6 +25,13 @@ namespace _JPP
         List<tabelkapokaz> tabelkapokazs;
         Tabelka_plan _tabelka_Plan { get; set; }
 
+        private List<string> lista1 { get; set; }
+        public List<string> Lista1 
+        { get { return  lista1; }
+            set { value = lista1; } 
+ 
+        }
+
         public Tabelka_plan Tabelka_Plan
             { get { return _tabelka_Plan; }
           set { _tabelka_Plan = value; }
@@ -56,6 +63,8 @@ namespace _JPP
             tabelka = _tabelka;
             tabelkapokazs = _tabelkapokazs;
             Tabelka_Plan = new Tabelka_plan();
+
+            Lista1 = new List<string>() { "text1", "text2" };
         }
 
 
@@ -81,10 +90,25 @@ namespace _JPP
                 Tabelka_Plans.Add(new Tabelka_plan(lines2));
             }
 
+            foreach (Tabelka_plan row in Tabelka_Plans)
+            {
+                row.Frequenz = row.Frequenz.Replace(" GHz","");
+                row.Diameter = row.Diameter.Replace(",", "0,");
+
+
+            }
+
+
+
+
 
 
             Grid_plan.ItemsSource = Tabelka_Plans;
             Grid_plan.Items.Refresh();
+
+
+
+
         }
 
         private void scal_Click(object sender, RoutedEventArgs e)
@@ -96,6 +120,7 @@ namespace _JPP
                     {
                     Tabelka_plan tmp = Tabelka_Plans.First(x => x.Lfd_Nr == szukana);
                     Tabelka_Plans[i].USER_LINK_ID += "/" + tmp.USER_LINK_ID.Substring(tmp.USER_LINK_ID.Length-4,4);
+                    Tabelka_Plans[i].Ile_odu = "2";
                     Tabelka_Plans.Remove(tmp);
                     }
             }
@@ -128,6 +153,7 @@ namespace _JPP
                 if (czy_jest>0)
                 {
                     Tabelka_plan row2 = Tabelka_Plans.First(x => Convert.ToDouble(x.Azimuth.Replace(",", ".")) == azym_1);
+                    row2.Dopasuj = row.RIFU_NR;
                     Tabelka_Plans_tmp.Add(row2);
                     Tabelka_Plans.Remove(row2);
                 }
@@ -140,7 +166,7 @@ namespace _JPP
                 
 
             }
-
+            
                   Tabelka_Plans_tmp.AddRange(Tabelka_Plans);
 
                 Stak_grid_dopasuj.DataContext = Tabelka_Plans_tmp;
@@ -172,13 +198,46 @@ namespace _JPP
         {
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-                var aaa = ((DataGrid)sender).SelectedItem;
 
+            var dragSource = sender as DataGrid;
 
-                var dragSource = this.Grid_dopasuj;
-                var data = aaa;
+                Tabelka_plan data = ((DataGrid)sender).SelectedItem as Tabelka_plan;
+                                 
                 DragDrop.DoDragDrop(dragSource, data, DragDropEffects.Move);
             }
+        }
+
+        private void BT_akceptuj_Click(object sender, RoutedEventArgs e)
+        {
+            //tworzenie tabeli uzgledniającej dane z obu tabel
+
+            for (int i = 0; i < tabelkapokazs.Count; i++)
+            {
+                Tabelka_plan row2 = Tabelka_Plans.First(x => x.Dopasuj== tabelkapokazs[i].RIFU_NR);
+                tabelkapokazs[i]=sprawdzaj_wartosci(tabelkapokazs[i], row2);
+            }
+        }
+
+        private tabelkapokaz sprawdzaj_wartosci(tabelkapokaz elem_1, Tabelka_plan elem_2)
+        {
+            //srednica
+          
+            if ( Convert.ToInt32(elem_1.RIFU.Replace(",", ".")) != Convert.ToInt32 (elem_2.Diameter.Replace(",", ".") ))  
+            { elem_1.RIFU = Convert.ToInt32(elem_2.Diameter.Replace(",", ".")).ToString(); }
+
+
+
+
+
+
+
+            return elem_1;
+        }
+
+
+        private void BT_zapisz_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
