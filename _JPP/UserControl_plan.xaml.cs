@@ -23,18 +23,19 @@ namespace _JPP
 
         Tabelka tabelka;
         List<tabelkapokaz> tabelkapokazs;
+        List<tabelkapokaz> tabelkapokazs2;
         Tabelka_plan _tabelka_Plan { get; set; }
 
         private List<string> lista1 { get; set; }
-        public List<string> Lista1 
-        { get { return  lista1; }
-            set { value = lista1; } 
- 
+        public List<string> Lista1
+        { get { return lista1; }
+            set { value = lista1; }
+
         }
 
         public Tabelka_plan Tabelka_Plan
-            { get { return _tabelka_Plan; }
-          set { _tabelka_Plan = value; }
+        { get { return _tabelka_Plan; }
+            set { _tabelka_Plan = value; }
         }
 
 
@@ -55,7 +56,7 @@ namespace _JPP
         }
 
 
-        public UserControl_plan(List<tabelkapokaz> _tabelkapokazs,Tabelka _tabelka)
+        public UserControl_plan(List<tabelkapokaz> _tabelkapokazs, Tabelka _tabelka)
         {
 
             InitializeComponent();
@@ -92,9 +93,13 @@ namespace _JPP
 
             foreach (Tabelka_plan row in Tabelka_Plans)
             {
-                row.Frequenz = row.Frequenz.Replace(" GHz","");
-                row.Diameter = row.Diameter.Replace(",", "0,");
+                if (!string.IsNullOrEmpty(row.Frequenz)) row.Frequenz = row.Frequenz.Replace(" GHz", "");
+                if (!string.IsNullOrEmpty(row.Frequenz)) row.Frequenz = row.Frequenz.Replace(" GHZ", "");
 
+                if (!string.IsNullOrEmpty(row.Diameter)) row.Diameter = row.Diameter.Replace(",00", "0");
+              
+
+                if (!string.IsNullOrEmpty(row.Azimuth)) row.Azimuth = row.Azimuth.Replace(",", ".");
 
             }
 
@@ -115,14 +120,14 @@ namespace _JPP
         {
             for (int i = 0; i < Tabelka_Plans.Count; i++)
             {
-                string szukana = Tabelka_Plans[i].Lfd_Nr+"a";
+                string szukana = Tabelka_Plans[i].Lfd_Nr + "a";
                 if (Tabelka_Plans.Count(x => x.Lfd_Nr == szukana) > 0)
-                    {
+                {
                     Tabelka_plan tmp = Tabelka_Plans.First(x => x.Lfd_Nr == szukana);
-                    Tabelka_Plans[i].USER_LINK_ID += "/" + tmp.USER_LINK_ID.Substring(tmp.USER_LINK_ID.Length-4,4);
+                    Tabelka_Plans[i].USER_LINK_ID += "/" + tmp.USER_LINK_ID.Substring(tmp.USER_LINK_ID.Length - 4, 4);
                     Tabelka_Plans[i].Ile_odu = "2";
                     Tabelka_Plans.Remove(tmp);
-                    }
+                }
             }
             Grid_plan.ItemsSource = Tabelka_Plans;
             Grid_plan.Items.Refresh();
@@ -134,43 +139,59 @@ namespace _JPP
 
         private void dopasuj_Click(object sender, RoutedEventArgs e)
         {
-           // this.Stak_grid_plan.Visibility = Visibility.Collapsed;
+            // this.Stak_grid_plan.Visibility = Visibility.Collapsed;
             this.Stak_grid_dopasuj.Visibility = Visibility.Visible;
             Stak_grid_dopasuj.DataContext = Tabelka_Plans;
 
             this.grid_tabelka29.ItemsSource = tabelkapokazs;
             //  Grid_dopasuj.Items.Refresh();
 
+
+            //pusta do wypełniania
             Tabelka_Plans_tmp = new List<Tabelka_plan>();
+            //pełna do uzuwania juz wykozystanych
+            List<Tabelka_plan> Tabelka_Plans_tmp2=new List<Tabelka_plan>();
+            Tabelka_Plans_tmp2.AddRange( Tabelka_Plans);
 
-
-            foreach (tabelkapokaz row in tabelkapokazs  )
+            int czy_jest;
+            foreach (tabelkapokaz row in tabelkapokazs)
             {
-               Double azym_1 =Convert.ToDouble(row.RICHTUNG.Replace(",", "."));
+                czy_jest = 0;
 
-                int czy_jest = Tabelka_Plans.Count(x => Convert.ToDouble(x.Azimuth.Replace(",", ".")) == azym_1);
-
-                if (czy_jest>0)
+                if (!string.IsNullOrEmpty(row.RICHTUNG))
                 {
-                    Tabelka_plan row2 = Tabelka_Plans.First(x => Convert.ToDouble(x.Azimuth.Replace(",", ".")) == azym_1);
-                    row2.Dopasuj = row.RIFU_NR;
-                    Tabelka_Plans_tmp.Add(row2);
-                    Tabelka_Plans.Remove(row2);
-                }
-                else
-                {
-                    Tabelka_Plans_tmp.Add(new Tabelka_plan());
-                   
-                }
 
-                
+                    Double azym_1 = Convert.ToDouble(row.RICHTUNG.Replace(",", "."));
+                    czy_jest = Tabelka_Plans_tmp2.Count(x => Convert.ToDouble(x.Azimuth) == azym_1);
+
+
+
+                    if (czy_jest > 0)
+                    {
+                        Tabelka_plan row2 = Tabelka_Plans_tmp2.First(x => Convert.ToDouble(x.Azimuth) == azym_1);
+                        row2.Dopasuj = row.RIFU_NR;
+                        Tabelka_Plans_tmp.Add(row2);
+                        Tabelka_Plans_tmp2.Remove(row2);
+                    }
+                    else
+                    {
+                        Tabelka_Plans_tmp.Add(new Tabelka_plan());
+
+                    }
+
+
+                }
+                else 
+                { Tabelka_Plans_tmp.Add(new Tabelka_plan()); }
+
+
 
             }
-            
-                  Tabelka_Plans_tmp.AddRange(Tabelka_Plans);
 
-                Stak_grid_dopasuj.DataContext = Tabelka_Plans_tmp;
-                
+            Tabelka_Plans_tmp.AddRange(Tabelka_Plans_tmp2);
+
+            Stak_grid_dopasuj.DataContext = Tabelka_Plans_tmp;
+
 
         }
 
@@ -199,43 +220,140 @@ namespace _JPP
             if (e.LeftButton == MouseButtonState.Pressed)
             {
 
-            var dragSource = sender as DataGrid;
+                var dragSource = sender as DataGrid;
 
                 Tabelka_plan data = ((DataGrid)sender).SelectedItem as Tabelka_plan;
-                                 
+
                 DragDrop.DoDragDrop(dragSource, data, DragDropEffects.Move);
             }
         }
 
         private void BT_akceptuj_Click(object sender, RoutedEventArgs e)
         {
+
+            tabelkapokazs2 = new List<tabelkapokaz>();
+
             //tworzenie tabeli uzgledniającej dane z obu tabel
 
+            List<Tabelka_plan> Tabelka_Plans_tmp3 = new List<Tabelka_plan>();
+                      
+            Tabelka_Plans_tmp3.AddRange(Tabelka_Plans);
+            
             for (int i = 0; i < tabelkapokazs.Count; i++)
             {
-                Tabelka_plan row2 = Tabelka_Plans.First(x => x.Dopasuj== tabelkapokazs[i].RIFU_NR);
-                tabelkapokazs[i]=sprawdzaj_wartosci(tabelkapokazs[i], row2);
+               
+
+                Tabelka_plan row2 = Tabelka_Plans.Find(x => x.Dopasuj == tabelkapokazs[i].RIFU_NR);
+
+                if (row2 != null)
+                {
+                    tabelkapokazs2.Add(sprawdzaj_wartosci(tabelkapokazs[i], row2));
+                    Tabelka_Plans_tmp3.Remove(row2);
+                }
+                else 
+                {
+                    tabelkapokazs2.Add(tabelkapokazs[i]);
+                }
+                
             }
+
+            //dodanie tych co pozostały a ich nie było w CAD
+            foreach (Tabelka_plan row2 in Tabelka_Plans_tmp3)
+            {
+                tabelkapokazs2.Add(sprawdzaj_wartosci_i_dodaj(row2));
+            }
+
+            this.grid_tabelka_do_zapisu.ItemsSource = tabelkapokazs2;
+
         }
 
-        private tabelkapokaz sprawdzaj_wartosci(tabelkapokaz elem_1, Tabelka_plan elem_2)
+        private tabelkapokaz sprawdzaj_wartosci(tabelkapokaz elem, Tabelka_plan elem_2)
         {
+            tabelkapokaz elem_1 = elem;
+
             //srednica
-          
-            if ( Convert.ToInt32(elem_1.RIFU.Replace(",", ".")) != Convert.ToInt32 (elem_2.Diameter.Replace(",", ".") ))  
-            { elem_1.RIFU = Convert.ToInt32(elem_2.Diameter.Replace(",", ".")).ToString(); }
 
+            int e1 = -1;
+            int e2 = -1;
+            string tmp1 = "";
+            string tmp2 = "";
 
+               
+             if (!string.IsNullOrEmpty(elem_1.RIFU)) tmp1 = elem_1.RIFU.Replace(",", ".");
+                {
+                    try
+                    {
 
+                        e1 = Convert.ToInt32(tmp1);
+                        e2 = Convert.ToInt32(elem_2.Diameter);
+                        if (e1 != e2) elem_1.RIFU = elem_2.Diameter;
+                    }
+                    catch (Exception)
+                    {
 
+                        throw;
+                    }
+                }
 
+            
+             
+            
+    
+            //czestotliwosc
+            if (elem_1.FREQUENZ != elem_2.Frequenz )
+            { elem_1.FREQUENZ = elem_2.Frequenz; }
 
+            //azymut
+            if (!string.IsNullOrEmpty(elem_2.Azimuth))
+            {
+                if (!string.IsNullOrEmpty(elem_1.RIFU) && (Convert.ToDouble(elem_1.RICHTUNG.Replace(",", ".")) != Convert.ToDouble(elem_2.Azimuth.Replace(",", "."))))
+                { elem_1.RICHTUNG = Convert.ToInt32(elem_2.Azimuth.Replace(",", ".")).ToString(); }
+            }
 
+                //Gegenstelle
+             if (elem_1.GEGENSTELLE != elem_2.NE_B)
+                { elem_1.GEGENSTELLE = elem_2.NE_B; }
+
+                //link
+                if (elem_1.Linknummer != elem_2.USER_LINK_ID)
+                { elem_1.Linknummer = elem_2.USER_LINK_ID; }
+
+                //odu
+                if (elem_1.ODU_ANZAHL != elem_2.Ile_odu || elem_2.Ile_odu=="2")
+                { elem_1.ODU_ANZAHL = elem_2.Ile_odu; }
+
+           
             return elem_1;
         }
 
+        private tabelkapokaz sprawdzaj_wartosci_i_dodaj(Tabelka_plan elem_2)
+        {
+            tabelkapokaz elem_1 = new tabelkapokaz();
+
+            elem_1.RIFU_NR = "Rifu XXX";
+
+            elem_1.RIFU = elem_2.Diameter;
+
+            elem_1.RICHTUNG = elem_2.Azimuth;
+            elem_1.FREQUENZ = elem_2.Frequenz;
+            elem_1.GEGENSTELLE = elem_2.NE_B;
+            elem_1.Linknummer = elem_2.USER_LINK_ID;
+            elem_1.ODU_ANZAHL = elem_2.Ile_odu;
+
+
+            return elem_1;
+
+        }
+
+
+
 
         private void BT_zapisz_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Grid_dopasuj_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
         }
