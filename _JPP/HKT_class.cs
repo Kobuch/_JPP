@@ -1426,10 +1426,12 @@ namespace _JPP
             }
         }
 
-        public void generuj_rzut_1radiolinii(int ant_nr)
+
+
+
+
+        public void generuj_rzut_1radiolinii(int ant_nr, string _typ_ant, string typ_odu)
         {
-
-
 
             Rzuty_radiolinii rzuty_Radiolinii = new Rzuty_radiolinii();
 
@@ -1438,7 +1440,7 @@ namespace _JPP
             string PN_text = "";
             PN_text = obsluga_Prop_Cad.GetCustomProperty("JPP-PN_rad");
             double PN = Math.PI / 2;
-            if (PN_text != null) PN = Convert.ToDouble(PN_text);
+            if (!string.IsNullOrEmpty( PN_text)) PN = Convert.ToDouble(PN_text);
 
             if (tabelka.napisy_z_excel[ant_nr, 1] == null)
             {
@@ -1448,7 +1450,7 @@ namespace _JPP
 
             //pobierz wartości położenia
 
-           Document acDoc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
+            Document acDoc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
             Database acCurDb = acDoc.Database;
 
             using (Transaction acTrans = acCurDb.TransactionManager.StartTransaction())
@@ -1457,67 +1459,77 @@ namespace _JPP
                 Point3d Pointbazowy = acDocEd.GetPoint("\n Wskaż miejsce wstwienia radiolinii").Value;
 
 
-
-                BlockTable acBlkTbl;
-                acBlkTbl = acTrans.GetObject(acCurDb.BlockTableId, OpenMode.ForWrite) as BlockTable;
+                // BlockTable acBlkTbl;
+                //  acBlkTbl = acTrans.GetObject(acCurDb.BlockTableId, OpenMode.ForWrite) as BlockTable;
 
 
                 // odczyt tyou anteny  13
 
 
-                if ((tabelka.napisy_z_excel[ant_nr, 13] == "2") || (tabelka.napisy_z_excel[ant_nr, 13] == "1"))
+                //add rozmiar
+                String nazwa_bloku = "JPP_" + tabelka.napisy_z_excel[ant_nr, 3];
+                //add typ ant
+                switch (_typ_ant)
                 {
-                    //ma odu osobne
-                    
-                    switch (tabelka.napisy_z_excel[ant_nr, 3])
-                    {
-                        case "300":
-                            rzuty_Radiolinii.rzut_300_osobne_odu(ant_nr, tabelka, PN, Pointbazowy);
-
-                            break;
-                        case "600":
-                            rzuty_Radiolinii.rzut_600_osobne_odu(ant_nr, tabelka, PN, Pointbazowy);
-
-                            break;
-
-                        case "1200":
-
-                            rzuty_Radiolinii.rzut_1200_osobne_odu(ant_nr, tabelka, PN, Pointbazowy);
-
-                            break;
-
-
-
-                    }
-
-
+                    case "Marconi":
+                        nazwa_bloku += "_MARC";
+                        break;
+                    case "VHLP":
+                        nazwa_bloku += "_VHLP";
+                        break;
+                    default:
+                        nazwa_bloku += "_VHLP";
+                        break;
                 }
-                else
+
+
+                //add  ODu ile
+
+                switch (tabelka.napisy_z_excel[ant_nr, 18])
                 {
-                    switch (tabelka.napisy_z_excel[ant_nr, 3])
-                    {
-                        case "300" :
-                            rzuty_Radiolinii.rzut_300_zintegrowane_odu(ant_nr, tabelka, PN, Pointbazowy);
-                            break;
-                        case "600":
-                            rzuty_Radiolinii.rzut_600_zintegrowane_odu(ant_nr, tabelka, PN, Pointbazowy);
-                            // 
-                            break;
-
-                        case "1200":
-                            rzuty_Radiolinii.rzut_1200_osobne_odu(ant_nr, tabelka, PN, Pointbazowy);
-
-                            // RiFu_Marconi_abgesetzt_1200_Grundriss
-                            break;
-
-
-
-                    }
+                    case "1":
+                        nazwa_bloku += "_1x";
+                        break;
+                    case "2":
+                        nazwa_bloku += "_2x";
+                        break;
+                    default:
+                        nazwa_bloku += "_0";
+                        break;
                 }
+
+                //add  ODu typ
+
+                switch (typ_odu)
+                {
+                    case "ERIC":
+                        nazwa_bloku += "ERIC";
+                        break;
+                    case "HUA":
+                        nazwa_bloku += "HUA";
+                        break;
+                    case "SIAE":
+                        nazwa_bloku += "SIAE";
+                        break;
+                    case "":
+                        nazwa_bloku += "";
+                        break;
+                    default:
+                        nazwa_bloku += "SIAE";
+                        break;
+                }
+
+                nazwa_bloku += "_PION";
+
+
+
+                rzuty_Radiolinii.rzut_radiolinii(ant_nr, tabelka, PN, Pointbazowy, nazwa_bloku);
+
                 acTrans.Commit();
-
-
             }
+          
+
+
         }
         public void generuj_rzut_wszystkich_radiolinii()
         {
@@ -1707,11 +1719,66 @@ namespace _JPP
             return (Math.PI / 180) * angle;
         }
 
-        public void rzut_radiolinii(int ant_nr, Tabelka tabelka, double PN, Point3d Pointbazowy)
+        public void rzut_radiolinii(int ant_nr, Tabelka tabelka, double PN, Point3d Pointbazowy , string nazwa_bloku )
         {
 
 
+            Document acDoc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
+            Database acCurDb = acDoc.Database;
 
+            using (Transaction acTrans = acCurDb.TransactionManager.StartTransaction())
+            {
+                Editor acDocEd = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
+
+                BlockTable acBlkTbl;
+                acBlkTbl = acTrans.GetObject(acCurDb.BlockTableId, OpenMode.ForWrite) as BlockTable;
+
+                
+
+
+                if (!acBlkTbl.Has(nazwa_bloku))
+                {
+                    try
+                    {
+                        // search for a dwg file named 'blockName' in AutoCAD search paths
+                        var filename = HostApplicationServices.Current.FindFile(nazwa_bloku+".dwg", acCurDb, FindFileHint.Default);
+                        // add the dwg model space as 'blockName' block definition in the current database block table
+                        using (var sourceDb = new Database(false, true))
+                        {
+                            sourceDb.ReadDwgFile(filename, FileOpenMode.OpenForReadAndAllShare, true, "");
+                            acCurDb.Insert(nazwa_bloku, sourceDb, true);
+                        }
+                    }
+                    catch
+                    {
+                        acDocEd.WriteMessage($"\n"+ nazwa_bloku+".dwg not found.");
+                        return;
+                    }
+                }
+
+                using (var br = new BlockReference(Pointbazowy, acBlkTbl[nazwa_bloku]))
+                {
+                    br.Rotation = ConvertToRadians(-270 - Convert.ToDouble(tabelka.napisy_z_excel[ant_nr, 8].Replace(",", "."))) + PN;
+                    var space = (BlockTableRecord)acTrans.GetObject(acCurDb.CurrentSpaceId, OpenMode.ForWrite);
+                    space.AppendEntity(br);
+                    acTrans.AddNewlyCreatedDBObject(br, true);
+
+                    //wstaw opis 
+
+                    MText acMText = new MText();
+                    acMText.SetDatabaseDefaults();
+                    acMText.SetAttachmentMovingLocation(AttachmentPoint.MiddleCenter);
+                    acMText.Location = new Point3d(2000 + Pointbazowy.X, Pointbazowy.Y, 0);
+                    acMText.ColorIndex = 7;
+                    acMText.Contents = tabelka.napisy_z_excel[ant_nr, 1] + ", %%C" + tabelka.napisy_z_excel[ant_nr, 3] + "\n" + tabelka.napisy_z_excel[ant_nr, 8] + "%%d";
+                    acMText.TextHeight = 200;
+
+
+                    space.AppendEntity(acMText);
+                    acTrans.AddNewlyCreatedDBObject(acMText, true);
+                }
+                acTrans.Commit();
+            }
         }
 
 
