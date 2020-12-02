@@ -18,11 +18,22 @@ namespace _JPP
         Tabelka tabelka = new Tabelka();
         Tabelka_plan tabelka_Plan = new Tabelka_plan();
         Obsluga_prop_cad obsluga_Prop_Cad = new Obsluga_prop_cad();
+        Document acDoc; 
+
+        public HKT_class()
+        {
+
+           
+            
+        }
+
+
+
 
         public void KHT_odczyt_tabeli29kol()
         {
-
-            Document acDoc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
+          
+            Document  acDoc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
             Database acCurDb = acDoc.Database;
             tabelka = new Tabelka();
             List<Texty> napisycad = new List<Texty>();
@@ -170,7 +181,7 @@ namespace _JPP
             tabelka = obsluga_Prop_Cad.odczyt_properties();
 
 
-            Document acDoc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
+           Document acDoc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
             Database acCurDb = acDoc.Database;
             Editor acDocEd = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
 
@@ -212,7 +223,7 @@ namespace _JPP
         public void rysuj_schemat_rifu_80(Tabelka tabelka, int wiersz, Point3d X0Y0)
         {
 
-            Document acDoc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
+          Document acDoc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
             Database acCurDb = acDoc.Database;
 
             using (Transaction acTrans = acCurDb.TransactionManager.StartTransaction())
@@ -500,7 +511,7 @@ namespace _JPP
         public void rysuj_schemat_rifu_normal_odu_integrated(Tabelka tabelka, int wiersz, Point3d X0Y0)
         {
 
-            Document acDoc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
+           Document acDoc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
             Database acCurDb = acDoc.Database;
 
             using (Transaction acTrans = acCurDb.TransactionManager.StartTransaction())
@@ -722,7 +733,7 @@ namespace _JPP
         public void rysuj_schemat_rifu_normal(Tabelka tabelka, int wiersz, Point3d X0Y0)
         {
 
-            Document acDoc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
+          Document acDoc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
             Database acCurDb = acDoc.Database;
 
             using (Transaction acTrans = acCurDb.TransactionManager.StartTransaction())
@@ -1382,7 +1393,7 @@ namespace _JPP
         public void pobierz_kierunek_polnocy()
         {
 
-            Document acDoc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
+          Document acDoc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
             Database acCurDb = acDoc.Database;
             Editor acDocEd = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
 
@@ -1437,7 +1448,7 @@ namespace _JPP
 
             //pobierz wartości położenia
 
-            Document acDoc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
+           Document acDoc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
             Database acCurDb = acDoc.Database;
 
             using (Transaction acTrans = acCurDb.TransactionManager.StartTransaction())
@@ -1518,12 +1529,12 @@ namespace _JPP
             string PN_text = "";
             PN_text = obsluga_Prop_Cad.GetCustomProperty("JPP-PN_rad");
             double PN = Math.PI / 2;
-            if (PN_text != null) PN = Convert.ToDouble(PN_text);
+            if (!string.IsNullOrEmpty( PN_text)) PN = Convert.ToDouble(PN_text);
 
 
             //pobierz wartości położenia
 
-            Document acDoc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
+           Document acDoc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
             Database acCurDb = acDoc.Database;
 
             using (Transaction acTrans = acCurDb.TransactionManager.StartTransaction())
@@ -1617,7 +1628,7 @@ namespace _JPP
 
             //pobierz wartości położenia
 
-            Document acDoc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
+           // Document acDoc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
             Database acCurDb = acDoc.Database;
 
             using (Transaction acTrans = acCurDb.TransactionManager.StartTransaction())
@@ -1690,14 +1701,29 @@ namespace _JPP
 
     public class Rzuty_radiolinii
     {
+
         private double ConvertToRadians(double angle)
         {
             return (Math.PI / 180) * angle;
         }
 
+        public void rzut_radiolinii(int ant_nr, Tabelka tabelka, double PN, Point3d Pointbazowy)
+        {
+
+
+
+        }
+
+
+
+
+
+
+
+
         public void rzut_300_osobne_odu(int ant_nr, Tabelka tabelka, double PN, Point3d Pointbazowy)
         {
-            Document acDoc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
+           Document acDoc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
             Database acCurDb = acDoc.Database;
 
             using (Transaction acTrans = acCurDb.TransactionManager.StartTransaction())
@@ -1753,7 +1779,7 @@ namespace _JPP
         }
         public void rzut_600_osobne_odu(int ant_nr, Tabelka tabelka, double PN, Point3d Pointbazowy)
         {
-            Document acDoc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
+           Document acDoc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
             Database acCurDb = acDoc.Database;
 
             using (Transaction acTrans = acCurDb.TransactionManager.StartTransaction())
@@ -2093,8 +2119,6 @@ namespace _JPP
     {
 
 
-
-
         public Tabelka odczyt_properties()
         {
             Tabelka tabelka_tmp = new Tabelka();
@@ -2332,9 +2356,69 @@ namespace _JPP
         }
 
 
+        public void zapisz_tabela_aktualizujaca_planowane_do_prop_acad(List<tabelkapokaz> tabelkapokazs2)
+        {
+
+
+            //czysc_properties();
+            int w = 0;
+            foreach (tabelkapokaz tabelkapok in tabelkapokazs2)
+            {
+                w = w + 1;
+                setDwgProp("JPP-W" + w + "K1", tabelkapok.RIFU_NR);
+                setDwgProp("JPP-W" + w + "K2", tabelkapok.NETZ);
+                
+                
+                
+                //if ((tabelkapok.RIFU.Length > 3) && (tabelkapok.RIFU.Contains("%%C")))
+                //{
+               // tabelkapok.RIFU = tabelkapok.RIFU.Replace("%%C", "");
+
+                setDwgProp("JPP-W" + w + "K3", tabelkapok.RIFU);
+
+                setDwgProp("JPP-W" + w + "K4", tabelkapok.AUFBAU);
+                setDwgProp("JPP-W" + w + "K5", tabelkapok.OPTION);
+                setDwgProp("JPP-W" + w + "K6", tabelkapok.FREQUENZ);
+                setDwgProp("JPP-W" + w + "K7", tabelkapok.Farbe);
+                if (!string.IsNullOrEmpty(tabelkapok.RICHTUNG)) tabelkapok.RICHTUNG = tabelkapok.RICHTUNG.Replace(".", ",");
+
+
+                setDwgProp("JPP-W" + w + "K8", tabelkapok.RICHTUNG);
+                setDwgProp("JPP-W" + w + "K9", tabelkapok.HÖHE);
+                setDwgProp("JPP-W" + w + "K10", tabelkapok.GEGENSTELLE);
+                setDwgProp("JPP-W" + w + "K11", tabelkapok.Linknummer);
+                setDwgProp("JPP-W" + w + "K12", tabelkapok.HOHLLEITER_TYP);
+                setDwgProp("JPP-W" + w + "K13", tabelkapok.HOHLLEITER_ANZAHL);
+                setDwgProp("JPP-W" + w + "K14", tabelkapok.HOHLLEITER_LÄNGE);
+                setDwgProp("JPP-W" + w + "K15", tabelkapok.HOHLLEITER_AUFBAU);
+                setDwgProp("JPP-W" + w + "K16", tabelkapok.HOHLLEITER_OPTION);
+                setDwgProp("JPP-W" + w + "K17", tabelkapok.ODU_TYP);
+                setDwgProp("JPP-W" + w + "K18", tabelkapok.ODU_ANZAHL);
+                setDwgProp("JPP-W" + w + "K19", tabelkapok.DATENKABEL_TYP);
+                setDwgProp("JPP-W" + w + "K20", tabelkapok.DATENKABEL_ANZAHL);
+                setDwgProp("JPP-W" + w + "K21", tabelkapok.DATENKABEL_LÄNGE);
+                setDwgProp("JPP-W" + w + "K22", tabelkapok.POWERKABEL_TYP);
+
+                setDwgProp("JPP-W" + w + "K23", tabelkapok.POWERKABEL_ANZAHL);
+                setDwgProp("JPP-W" + w + "K24", tabelkapok.POWERKABEL_LÄNGE);
+                setDwgProp("JPP-W" + w + "K25", tabelkapok.EISSCHUTZ);
+                setDwgProp("JPP-W" + w + "K26", tabelkapok.STATI_VERDREHUNG);
+                setDwgProp("JPP-W" + w + "K27", tabelkapok.ANT_TAEGER_NR);
+                setDwgProp("JPP-W" + w + "K28", tabelkapok.ANT_TÄGER_DURCHM);
+                setDwgProp("JPP-W" + w + "K29", tabelkapok.BEMERKUNG);
+
+            }
+
+            setDwgProp("JPP-ile_wierszy", w.ToString());
+            setDwgProp("JPP-ile_kolumn", "29");
+        }
+
+
+
         public void czysc_properties()
         {
             Document acDoc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
+            acDoc.LockDocument();
             Database acCurDb = acDoc.Database;
 
 
@@ -3173,6 +3257,7 @@ namespace _JPP
         public string ANT_TAEGER_NR { get; set; }
         public string ANT_TÄGER_DURCHM { get; set; }
         public string BEMERKUNG { get; set; }
+
 
     }
 

@@ -26,39 +26,50 @@
 
         <Grid  x:Name="Grid1"  SelectiveScrollingGrid.SelectiveScrollingOrientation="Both">
             <Grid.RowDefinitions>
+                <RowDefinition Height="20"/>
                 <RowDefinition Height="40"/>
-                <RowDefinition Height="40"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
 
             <StackPanel Grid.Row="0" Orientation="Horizontal" Grid.ColumnSpan="2" Grid.RowSpan="2">
 
             </StackPanel>
+            <Separator/>
+
             <StackPanel Orientation="Horizontal" Grid.Row="1">
+                <Label Content="Wklej ze schowka po wybraniu w Excelu:" FontSize="13"/>
                 <Button x:Name="BT_wklej" Content="Wklej ze schowka" Width="150" Height="25" Margin="3" Click="wklej_Click"/>
-                <Button x:Name="BT_scal" Content="Scal te same Rifu" Width="150" Height="25" Margin="3" Click="scal_Click"/>
-                <Button x:Name="BT_dopasuj" Content="Dopasuj" Width="150" Height="25" Margin="3" Click="dopasuj_Click"/>
-                <Button x:Name="BT_akceptuj" Content="Akceptuj" Width="150" Height="25" Margin="3" Click="BT_akceptuj_Click"/>
-                <Button x:Name="BT_zapisz" Content="Zapisz" Width="150" Height="25" Margin="3" Click="BT_zapisz_Click"/>
-
-
+              
             </StackPanel>
-
+            <Separator/>
+            
             <StackPanel Grid.Row="2" >
-                <StackPanel x:Name="Stak_grid_plan" >
+                <Label Content="Wklejone ze schowka:" FontSize="13" Margin="3"/>
+                
+                <StackPanel x:Name="Stak_grid_plan" Orientation="Horizontal" >
+                    <Button x:Name="BT_scal" Content="Scal te same Rifu" Width="100" Height="25" Margin="3" Click="scal_Click"/>
                     <DataGrid   x:Name="Grid_plan" HorizontalAlignment="Left" Margin="3" VerticalAlignment="Top" CanUserAddRows="False" FontSize="9">
                       
                     </DataGrid>
+                    
                 </StackPanel>
-                <StackPanel  x:Name="Stak_grid_dopasuj" Orientation="Horizontal">
+            </StackPanel>    
+           
+            <Separator/>
+            
+            <StackPanel  x:Name="Stak_grid_dopasuj" Orientation="Horizontal" Grid.Row="3">
+                    <StackPanel Orientation="Vertical">
+                       <Button x:Name="BT_dopasuj" Content="Dopasuj" Width="70" Height="25" Margin="3,20,3,3" Click="dopasuj_Click"/>
+                       <Button x:Name="BT_akceptuj" Content="Akceptuj" Width="70" Height="25" Margin="3" Click="BT_akceptuj_Click"/>
+                    </StackPanel>
+                <StackPanel Orientation="Horizontal">
                     <DataGrid   x:Name="Grid_dopasuj" 
                         AllowDrop="True"
                         SelectedItem="{Binding Tabelka_Plan, Mode=TwoWay}"
-                        DragOver="MyGrid_DragOver"
-                         DragEnter="MyGrid_DragEnter"
-                        MouseMove="Grid_dopasuj_MouseMove"
-                        
+
                         Margin="3" VerticalAlignment="Top" FontSize="9" HorizontalAlignment="Left" ItemsSource="{Binding}" AutoGenerateColumns="False" CanUserAddRows="False" SelectionChanged="Grid_dopasuj_SelectionChanged">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Lfd_Nr" Width="Auto" Binding="{Binding Lfd_Nr}" />
@@ -70,22 +81,21 @@
                             <DataGridTextColumn Header="USER_LINK_ID" Width="Auto" Binding="{Binding USER_LINK_ID}" />
                             <DataGridTextColumn Header="Ile_odu" Width="Auto" Binding="{Binding Ile_odu}" />
                             <DataGridTextColumn Header="Main_Status" Width="Auto" Binding="{Binding Main_Status}" />
-
-
                             <DataGridTextColumn Header="Dopasuj" Width="Auto"  Binding="{Binding Dopasuj}"/>
-
                         </DataGrid.Columns>
 
                         <DataGrid.ColumnHeaderStyle>
                             <Style TargetType="{x:Type DataGridColumnHeader}">
                                 <Setter Property="LayoutTransform">
-                                    <Setter.Value>
-                                        <RotateTransform Angle="270" />
-                                    </Setter.Value>
-                                </Setter>
+                                <Setter.Value>
+                                    <RotateTransform Angle="270" />
+                                </Setter.Value>
+                            </Setter>
+                                <Setter Property="Width" Value="70"/>
                             </Style>
                         </DataGrid.ColumnHeaderStyle>
                     </DataGrid>
+                
                     <DataGrid x:Name="grid_tabelka29" Margin="3" VerticalAlignment="Top"  FontSize="9" HorizontalAlignment="Left" AutoGenerateColumns="True" CanUserAddRows="False"
                            >
                         <DataGrid.ColumnHeaderStyle>
@@ -95,17 +105,21 @@
                                         <RotateTransform Angle="270" />
                                     </Setter.Value>
                                 </Setter>
+                                <Setter Property="Width" Value="70"/>
                             </Style>
                         </DataGrid.ColumnHeaderStyle>
-
-
-
                     </DataGrid>
 
                 </StackPanel>
+            </StackPanel>
 
-                <StackPanel >
-                    <DataGrid x:Name="grid_tabelka_do_zapisu" Margin="3" VerticalAlignment="Top"  FontSize="9" HorizontalAlignment="Left" AutoGenerateColumns="True" CanUserAddRows="False"      >
+            <Separator/>
+                
+            <StackPanel  Orientation="Horizontal" Grid.Row="4">
+
+                    <Button x:Name="BT_zapisz" Content="Zapisz" Width="70" Height="25" Margin="3" Click="BT_zapisz_Click"/>
+
+                    <DataGrid x:Name="grid_tabelka_do_zapisu" Margin="3" VerticalAlignment="Top"  FontSize="11" HorizontalAlignment="Left" AutoGenerateColumns="True" CanUserAddRows="False"      >
                         <DataGrid.ColumnHeaderStyle>
                             <Style TargetType="{x:Type DataGridColumnHeader}">
                                 <Setter Property="LayoutTransform">
@@ -115,11 +129,8 @@
                                 </Setter>
                             </Style>
                         </DataGrid.ColumnHeaderStyle>
-
-
                     </DataGrid>
-
-                </StackPanel>
+           
 
 
             </StackPanel>

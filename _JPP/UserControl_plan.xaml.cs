@@ -68,7 +68,12 @@ namespace _JPP
             Lista1 = new List<string>() { "text1", "text2" };
         }
 
-
+/// <summary>
+/// WKLEJ z clipboard
+///
+/// </summary>
+/// <param name="sender"></param>
+/// <param name="e"></param>
         private void wklej_Click(object sender, RoutedEventArgs e)
         {
             List<string[]> wiersze = new List<string[]>();
@@ -115,7 +120,12 @@ namespace _JPP
 
 
         }
-
+        /// <summary>
+        /// Scal - scala takie same radiolinie po numerze z literką a jako drugą
+        ///  i aktualizuje liste    " Tabelka_Plans "
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void scal_Click(object sender, RoutedEventArgs e)
         {
             for (int i = 0; i < Tabelka_Plans.Count; i++)
@@ -136,6 +146,14 @@ namespace _JPP
 
 
         }
+
+        /// <summary>
+        /// Dopasowujetabele planowane do tabeli z istniejacej.
+        /// jeżeli jest taki sam to ustawia obok siebie, jeżlei nie to pod lista.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+
 
         private void dopasuj_Click(object sender, RoutedEventArgs e)
         {
@@ -195,38 +213,15 @@ namespace _JPP
 
         }
 
-        private void MyGrid_DragOver(object sender, DragEventArgs e)
-        {
-            DragOver_DragEnter(sender, e);
+     
 
-        }
 
-        private void MyGrid_DragEnter(object sender, DragEventArgs e)
-        {
-            DragOver_DragEnter(sender, e);
-        }
-        private void DragOver_DragEnter(object sender, DragEventArgs e)
-        {
-            // code here to decide whether drag target is ok
-
-            e.Effects = DragDropEffects.None;
-            e.Effects = DragDropEffects.Move;
-            e.Effects = DragDropEffects.Copy;
-            e.Handled = true;
-            return;
-        }
-        private void Grid_dopasuj_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (e.LeftButton == MouseButtonState.Pressed)
-            {
-
-                var dragSource = sender as DataGrid;
-
-                Tabelka_plan data = ((DataGrid)sender).SelectedItem as Tabelka_plan;
-
-                DragDrop.DoDragDrop(dragSource, data, DragDropEffects.Move);
-            }
-        }
+        /// <summary>
+        /// Akceptuje dopasowanie i łaczy obie tabele w jedną wynikową
+        /// zapisuje dane do listy "tabelkapokazs2 "
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
 
         private void BT_akceptuj_Click(object sender, RoutedEventArgs e)
         {
@@ -267,6 +262,32 @@ namespace _JPP
 
         }
 
+
+        /// <summary>
+        /// zapisuje zaktualizowanatabele do properties autocada;
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BT_zapisz_Click(object sender, RoutedEventArgs e)
+        {
+            if (tabelkapokazs2!=null && tabelkapokazs2.Count>0)
+            {
+                //zapisz 
+
+                Obsluga_prop_cad obsluga_Prop_Cad = new Obsluga_prop_cad();
+                //zapisz tabeli z properties cadowego
+                obsluga_Prop_Cad.czysc_properties();
+                obsluga_Prop_Cad.zapisz_tabela_aktualizujaca_planowane_do_prop_acad(tabelkapokazs2);
+                Autodesk.AutoCAD.ApplicationServices.Application.ShowAlertDialog("Zapisano w properties \n Kolumn:  29 \n Wierszy: " + tabelkapokazs2.Count.ToString());
+            }
+
+
+
+
+        }
+
+
         private tabelkapokaz sprawdzaj_wartosci(tabelkapokaz elem, Tabelka_plan elem_2)
         {
             tabelkapokaz elem_1 = elem;
@@ -276,7 +297,7 @@ namespace _JPP
             int e1 = -1;
             int e2 = -1;
             string tmp1 = "";
-            string tmp2 = "";
+         
 
                
              if (!string.IsNullOrEmpty(elem_1.RIFU)) tmp1 = elem_1.RIFU.Replace(",", ".");
@@ -348,14 +369,46 @@ namespace _JPP
 
 
 
-        private void BT_zapisz_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         private void Grid_dopasuj_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
         }
+        private void MyGrid_DragOver(object sender, DragEventArgs e)
+        {
+            DragOver_DragEnter(sender, e);
+
+        }
+
+        private void MyGrid_DragEnter(object sender, DragEventArgs e)
+        {
+            DragOver_DragEnter(sender, e);
+        }
+        private void DragOver_DragEnter(object sender, DragEventArgs e)
+        {
+            // code here to decide whether drag target is ok
+
+            e.Effects = DragDropEffects.None;
+            e.Effects = DragDropEffects.Move;
+            e.Effects = DragDropEffects.Copy;
+            e.Handled = true;
+            return;
+        }
+        private void Grid_dopasuj_MouseMove(object sender, MouseEventArgs e)
+        {
+            //if (e.LeftButton == MouseButtonState.Pressed)
+            //{
+
+            //    var dragSource = sender as DataGrid;
+
+            //    Tabelka_plan data = ((DataGrid)sender).SelectedItem as Tabelka_plan;
+
+            //    DragDrop.DoDragDrop(dragSource, data, DragDropEffects.Move);
+            //}
+        }
+
+
+
+
+
     }
 }
