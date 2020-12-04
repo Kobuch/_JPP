@@ -1426,13 +1426,8 @@ namespace _JPP
             }
         }
 
-
-
-
-
-        public void generuj_rzut_1radiolinii(int ant_nr, string _typ_ant, string typ_odu)
+        public void generuj_rzut_1radiolinii(int ant_nr)
         {
-
             Rzuty_radiolinii rzuty_Radiolinii = new Rzuty_radiolinii();
 
             Obsluga_prop_cad obsluga_Prop_Cad = new Obsluga_prop_cad();
@@ -1440,7 +1435,7 @@ namespace _JPP
             string PN_text = "";
             PN_text = obsluga_Prop_Cad.GetCustomProperty("JPP-PN_rad");
             double PN = Math.PI / 2;
-            if (!string.IsNullOrEmpty( PN_text)) PN = Convert.ToDouble(PN_text);
+            if (!string.IsNullOrEmpty(PN_text)) PN = Convert.ToDouble(PN_text);
 
             if (tabelka.napisy_z_excel[ant_nr, 1] == null)
             {
@@ -1458,66 +1453,26 @@ namespace _JPP
                 Editor acDocEd = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
                 Point3d Pointbazowy = acDocEd.GetPoint("\n Wskaż miejsce wstwienia radiolinii").Value;
 
-
-                // BlockTable acBlkTbl;
-                //  acBlkTbl = acTrans.GetObject(acCurDb.BlockTableId, OpenMode.ForWrite) as BlockTable;
-
-
-                // odczyt tyou anteny  13
-
-
                 //add rozmiar
                 String nazwa_bloku = "JPP_" + tabelka.napisy_z_excel[ant_nr, 3];
-                //add typ ant
-                switch (_typ_ant)
-                {
-                    case "Marconi":
-                        nazwa_bloku += "_MARC";
-                        break;
-                    case "VHLP":
-                        nazwa_bloku += "_VHLP";
-                        break;
-                    default:
-                        nazwa_bloku += "_VHLP";
-                        break;
-                }
-
-
+           
+                
                 //add  ODu ile
 
                 switch (tabelka.napisy_z_excel[ant_nr, 18])
                 {
                     case "1":
-                        nazwa_bloku += "_1x";
+                        nazwa_bloku += "_1_ODU";
                         break;
                     case "2":
-                        nazwa_bloku += "_2x";
+                        nazwa_bloku += "_2_ODU";
                         break;
                     default:
-                        nazwa_bloku += "_0";
+                        nazwa_bloku += "_0_ODU";
                         break;
                 }
-
-                //add  ODu typ
-
-                switch (typ_odu)
-                {
-                    case "ERIC":
-                        nazwa_bloku += "ERIC";
-                        break;
-                    case "HUA":
-                        nazwa_bloku += "HUA";
-                        break;
-                    case "SIAE":
-                        nazwa_bloku += "SIAE";
-                        break;
-                    case "":
-                        nazwa_bloku += "";
-                        break;
-                    default:
-                        nazwa_bloku += "SIAE";
-                        break;
-                }
+                 
+             
 
                 nazwa_bloku += "_PION";
 
@@ -1527,6 +1482,111 @@ namespace _JPP
 
                 acTrans.Commit();
             }
+
+        }
+
+
+
+
+
+
+        public void generuj_rzut_1radiolinii(int ant_nr, string _typ_ant, string typ_odu)
+        {
+
+            //Rzuty_radiolinii rzuty_Radiolinii = new Rzuty_radiolinii();
+
+            //Obsluga_prop_cad obsluga_Prop_Cad = new Obsluga_prop_cad();
+            //tabelka = obsluga_Prop_Cad.odczyt_properties();
+            //string PN_text = "";
+            //PN_text = obsluga_Prop_Cad.GetCustomProperty("JPP-PN_rad");
+            //double PN = Math.PI / 2;
+            //if (!string.IsNullOrEmpty( PN_text)) PN = Convert.ToDouble(PN_text);
+
+            //if (tabelka.napisy_z_excel[ant_nr, 1] == null)
+            //{
+            //    Autodesk.AutoCAD.ApplicationServices.Application.ShowAlertDialog("Brak danych dla Rifu: " + ant_nr.ToString());
+            //    return;
+            //}
+
+            ////pobierz wartości położenia
+
+            //Document acDoc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
+            //Database acCurDb = acDoc.Database;
+
+            //using (Transaction acTrans = acCurDb.TransactionManager.StartTransaction())
+            //{
+            //    Editor acDocEd = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
+            //    Point3d Pointbazowy = acDocEd.GetPoint("\n Wskaż miejsce wstwienia radiolinii").Value;
+
+
+            //    // BlockTable acBlkTbl;
+            //    //  acBlkTbl = acTrans.GetObject(acCurDb.BlockTableId, OpenMode.ForWrite) as BlockTable;
+
+
+            //    // odczyt tyou anteny  13
+
+
+            //    //add rozmiar
+            //    String nazwa_bloku = "JPP_" + tabelka.napisy_z_excel[ant_nr, 3];
+            //    //add typ ant
+            //    switch (_typ_ant)
+            //    {
+            //        case "Marconi":
+            //            nazwa_bloku += "_MARC";
+            //            break;
+            //        case "VHLP":
+            //            nazwa_bloku += "_VHLP";
+            //            break;
+            //        default:
+            //            nazwa_bloku += "_VHLP";
+            //            break;
+            //    }
+
+
+            //    //add  ODu ile
+
+            //    switch (tabelka.napisy_z_excel[ant_nr, 18])
+            //    {
+            //        case "1":
+            //            nazwa_bloku += "_1x";
+            //            break;
+            //        case "2":
+            //            nazwa_bloku += "_2x";
+            //            break;
+            //        default:
+            //            nazwa_bloku += "_0";
+            //            break;
+            //    }
+
+            //    //add  ODu typ
+
+            //    switch (typ_odu)
+            //    {
+            //        case "ERIC":
+            //            nazwa_bloku += "ERIC";
+            //            break;
+            //        case "HUA":
+            //            nazwa_bloku += "HUA";
+            //            break;
+            //        case "SIAE":
+            //            nazwa_bloku += "SIAE";
+            //            break;
+            //        case "":
+            //            nazwa_bloku += "";
+            //            break;
+            //        default:
+            //            nazwa_bloku += "SIAE";
+            //            break;
+            //    }
+
+            //    nazwa_bloku += "_PION";
+
+
+
+            //    rzuty_Radiolinii.rzut_radiolinii(ant_nr, tabelka, PN, Pointbazowy, nazwa_bloku);
+
+            //    acTrans.Commit();
+            //}
           
 
 
@@ -1564,60 +1624,15 @@ namespace _JPP
                 for (int ant_nr = 1; ant_nr <= tabelka.ilewierszy; ant_nr++)
                 {
 
-
-
-                    if ((tabelka.napisy_z_excel[ant_nr, 13] == "2") || (tabelka.napisy_z_excel[ant_nr, 13] == "1"))
-                    {
-                        //ma odu osobne
-
-                        switch (tabelka.napisy_z_excel[ant_nr, 3])
+                    if (!string.IsNullOrEmpty(tabelka.napisy_z_excel[ant_nr, 1]))
                         {
-                            case "300":
-                                rzuty_Radiolinii.rzut_300_osobne_odu(ant_nr, tabelka, PN, Pointbazowy);
+                        generuj_rzut_1radiolinii(ant_nr);
 
-                                break;
-                            case "600":
-                                rzuty_Radiolinii.rzut_600_osobne_odu(ant_nr, tabelka, PN, Pointbazowy);
-
-                                break;
-
-                            case "1200":
-
-                                rzuty_Radiolinii.rzut_1200_osobne_odu(ant_nr, tabelka, PN, Pointbazowy);
-
-                                break;
-
-
-
+                         Pointbazowy = new Point3d(Pointbazowy.X, Pointbazowy.Y - 2000, Pointbazowy.Z);
                         }
 
-
-                    }
-                    else
-                    {
-                        switch (tabelka.napisy_z_excel[ant_nr, 3])
-                        {
-                            case "300":
-                                rzuty_Radiolinii.rzut_300_zintegrowane_odu(ant_nr, tabelka, PN, Pointbazowy);
-
-                                break;
-                            case "600":
-                                rzuty_Radiolinii.rzut_600_zintegrowane_odu(ant_nr, tabelka, PN, Pointbazowy);
-                                // 
-                                break;
-
-                            case "1200":
-
-                                rzuty_Radiolinii.rzut_1200_osobne_odu(ant_nr, tabelka, PN, Pointbazowy);
-
-                                // RiFu_Marconi_abgesetzt_1200_Grundriss
-                                break;
-
-
-
-                        }
-                    }
-                    Pointbazowy = new Point3d(Pointbazowy.X, Pointbazowy.Y - 2000, Pointbazowy.Z);
+                  
+                   
 
                 }
                 acTrans.Commit();
@@ -1788,287 +1803,287 @@ namespace _JPP
 
 
 
-        public void rzut_300_osobne_odu(int ant_nr, Tabelka tabelka, double PN, Point3d Pointbazowy)
-        {
-           Document acDoc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
-            Database acCurDb = acDoc.Database;
+        //public void rzut_300_osobne_odu(int ant_nr, Tabelka tabelka, double PN, Point3d Pointbazowy)
+        //{
+        //   Document acDoc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
+        //    Database acCurDb = acDoc.Database;
 
-            using (Transaction acTrans = acCurDb.TransactionManager.StartTransaction())
-            {
-                Editor acDocEd = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
+        //    using (Transaction acTrans = acCurDb.TransactionManager.StartTransaction())
+        //    {
+        //        Editor acDocEd = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
 
-                BlockTable acBlkTbl;
-                acBlkTbl = acTrans.GetObject(acCurDb.BlockTableId, OpenMode.ForWrite) as BlockTable;
+        //        BlockTable acBlkTbl;
+        //        acBlkTbl = acTrans.GetObject(acCurDb.BlockTableId, OpenMode.ForWrite) as BlockTable;
 
-                if (!acBlkTbl.Has("RiFu_Marconi_abgesetzt_300_Grundriss"))
-                {
-                    try
-                    {
-                        // search for a dwg file named 'blockName' in AutoCAD search paths
-                        var filename = HostApplicationServices.Current.FindFile("RiFu_Marconi_abgesetzt_300_Grundriss.dwg", acCurDb, FindFileHint.Default);
-                        // add the dwg model space as 'blockName' block definition in the current database block table
-                        using (var sourceDb = new Database(false, true))
-                        {
-                            sourceDb.ReadDwgFile(filename, FileOpenMode.OpenForReadAndAllShare, true, "");
-                            acCurDb.Insert("RiFu_Marconi_abgesetzt_300_Grundriss", sourceDb, true);
-                        }
-                    }
-                    catch
-                    {
-                        acDocEd.WriteMessage($"\nBlock RiFu_Marconi_abgesetzt_300_Grundriss.dwg not found.");
-                        return;
-                    }
-                }
+        //        if (!acBlkTbl.Has("RiFu_Marconi_abgesetzt_300_Grundriss"))
+        //        {
+        //            try
+        //            {
+        //                // search for a dwg file named 'blockName' in AutoCAD search paths
+        //                var filename = HostApplicationServices.Current.FindFile("RiFu_Marconi_abgesetzt_300_Grundriss.dwg", acCurDb, FindFileHint.Default);
+        //                // add the dwg model space as 'blockName' block definition in the current database block table
+        //                using (var sourceDb = new Database(false, true))
+        //                {
+        //                    sourceDb.ReadDwgFile(filename, FileOpenMode.OpenForReadAndAllShare, true, "");
+        //                    acCurDb.Insert("RiFu_Marconi_abgesetzt_300_Grundriss", sourceDb, true);
+        //                }
+        //            }
+        //            catch
+        //            {
+        //                acDocEd.WriteMessage($"\nBlock RiFu_Marconi_abgesetzt_300_Grundriss.dwg not found.");
+        //                return;
+        //            }
+        //        }
 
-                using (var br = new BlockReference(Pointbazowy, acBlkTbl["RiFu_Marconi_abgesetzt_300_Grundriss"]))
-                {
-                    br.Rotation = ConvertToRadians(-270 - Convert.ToDouble(tabelka.napisy_z_excel[ant_nr, 8].Replace(",", "."))) + PN;
-                    var space = (BlockTableRecord)acTrans.GetObject(acCurDb.CurrentSpaceId, OpenMode.ForWrite);
-                    space.AppendEntity(br);
-                    acTrans.AddNewlyCreatedDBObject(br, true);
+        //        using (var br = new BlockReference(Pointbazowy, acBlkTbl["RiFu_Marconi_abgesetzt_300_Grundriss"]))
+        //        {
+        //            br.Rotation = ConvertToRadians(-270 - Convert.ToDouble(tabelka.napisy_z_excel[ant_nr, 8].Replace(",", "."))) + PN;
+        //            var space = (BlockTableRecord)acTrans.GetObject(acCurDb.CurrentSpaceId, OpenMode.ForWrite);
+        //            space.AppendEntity(br);
+        //            acTrans.AddNewlyCreatedDBObject(br, true);
 
-                    //wstaw opis 
+        //            //wstaw opis 
 
-                    MText acMText = new MText();
-                    acMText.SetDatabaseDefaults();
-                    acMText.SetAttachmentMovingLocation(AttachmentPoint.MiddleCenter);
-                    acMText.Location = new Point3d(2000 + Pointbazowy.X, Pointbazowy.Y, 0);
-                    acMText.ColorIndex = 7;
-                    acMText.Contents = tabelka.napisy_z_excel[ant_nr, 1] + ", %%C" + tabelka.napisy_z_excel[ant_nr, 3] + "\n" + tabelka.napisy_z_excel[ant_nr, 8] + "%%d";
-                    acMText.TextHeight = 200;
-
-
-                    space.AppendEntity(acMText);
-                    acTrans.AddNewlyCreatedDBObject(acMText, true);
-                }
-                acTrans.Commit();
-            }
-        }
-        public void rzut_600_osobne_odu(int ant_nr, Tabelka tabelka, double PN, Point3d Pointbazowy)
-        {
-           Document acDoc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
-            Database acCurDb = acDoc.Database;
-
-            using (Transaction acTrans = acCurDb.TransactionManager.StartTransaction())
-            {
-                Editor acDocEd = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
-
-                BlockTable acBlkTbl;
-                acBlkTbl = acTrans.GetObject(acCurDb.BlockTableId, OpenMode.ForWrite) as BlockTable;
-
-                if (!acBlkTbl.Has("RiFu_Marconi_abgesetzt_600_Grundriss"))
-                {
-                    try
-                    {
-                        // search for a dwg file named 'blockName' in AutoCAD search paths
-                        var filename = HostApplicationServices.Current.FindFile("RiFu_Marconi_abgesetzt_600_Grundriss.dwg", acCurDb, FindFileHint.Default);
-                        // add the dwg model space as 'blockName' block definition in the current database block table
-                        using (var sourceDb = new Database(false, true))
-                        {
-                            sourceDb.ReadDwgFile(filename, FileOpenMode.OpenForReadAndAllShare, true, "");
-                            acCurDb.Insert("RiFu_Marconi_abgesetzt_600_Grundriss", sourceDb, true);
-                        }
-                    }
-                    catch
-                    {
-                        acDocEd.WriteMessage($"\nBlock RiFu_Marconi_abgesetzt_600_Grundriss.dwg not found.");
-                        return;
-                    }
-                }
-
-                using (var br = new BlockReference(Pointbazowy, acBlkTbl["RiFu_Marconi_abgesetzt_600_Grundriss"]))
-                {
-                    br.Rotation = ConvertToRadians(-270 - Convert.ToDouble(tabelka.napisy_z_excel[ant_nr, 8].Replace(",", "."))) + PN;
-                    var space = (BlockTableRecord)acTrans.GetObject(acCurDb.CurrentSpaceId, OpenMode.ForWrite);
-                    space.AppendEntity(br);
-                    acTrans.AddNewlyCreatedDBObject(br, true);
-
-                    //wstaw opis 
-
-                    MText acMText = new MText();
-                    acMText.SetDatabaseDefaults();
-                    acMText.SetAttachmentMovingLocation(AttachmentPoint.MiddleCenter);
-                    acMText.Location = new Point3d(2000 + Pointbazowy.X, Pointbazowy.Y, 0);
-                    acMText.ColorIndex = 7;
-                    acMText.Contents = tabelka.napisy_z_excel[ant_nr, 1] + ", %%C" + tabelka.napisy_z_excel[ant_nr, 3] + "\n" + tabelka.napisy_z_excel[ant_nr, 8] + "%%d";
-                    acMText.TextHeight = 200;
+        //            MText acMText = new MText();
+        //            acMText.SetDatabaseDefaults();
+        //            acMText.SetAttachmentMovingLocation(AttachmentPoint.MiddleCenter);
+        //            acMText.Location = new Point3d(2000 + Pointbazowy.X, Pointbazowy.Y, 0);
+        //            acMText.ColorIndex = 7;
+        //            acMText.Contents = tabelka.napisy_z_excel[ant_nr, 1] + ", %%C" + tabelka.napisy_z_excel[ant_nr, 3] + "\n" + tabelka.napisy_z_excel[ant_nr, 8] + "%%d";
+        //            acMText.TextHeight = 200;
 
 
-                    space.AppendEntity(acMText);
-                    acTrans.AddNewlyCreatedDBObject(acMText, true);
-                }
-                acTrans.Commit();
-            }
-        }
+        //            space.AppendEntity(acMText);
+        //            acTrans.AddNewlyCreatedDBObject(acMText, true);
+        //        }
+        //        acTrans.Commit();
+        //    }
+        //}
+        //public void rzut_600_osobne_odu(int ant_nr, Tabelka tabelka, double PN, Point3d Pointbazowy)
+        //{
+        //   Document acDoc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
+        //    Database acCurDb = acDoc.Database;
 
-        public void rzut_1200_osobne_odu(int ant_nr, Tabelka tabelka, double PN, Point3d Pointbazowy)
-        {
-            Document acDoc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
-            Database acCurDb = acDoc.Database;
+        //    using (Transaction acTrans = acCurDb.TransactionManager.StartTransaction())
+        //    {
+        //        Editor acDocEd = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
 
-            using (Transaction acTrans = acCurDb.TransactionManager.StartTransaction())
-            {
-                Editor acDocEd = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
+        //        BlockTable acBlkTbl;
+        //        acBlkTbl = acTrans.GetObject(acCurDb.BlockTableId, OpenMode.ForWrite) as BlockTable;
 
-                BlockTable acBlkTbl;
-                acBlkTbl = acTrans.GetObject(acCurDb.BlockTableId, OpenMode.ForWrite) as BlockTable;
+        //        if (!acBlkTbl.Has("RiFu_Marconi_abgesetzt_600_Grundriss"))
+        //        {
+        //            try
+        //            {
+        //                // search for a dwg file named 'blockName' in AutoCAD search paths
+        //                var filename = HostApplicationServices.Current.FindFile("RiFu_Marconi_abgesetzt_600_Grundriss.dwg", acCurDb, FindFileHint.Default);
+        //                // add the dwg model space as 'blockName' block definition in the current database block table
+        //                using (var sourceDb = new Database(false, true))
+        //                {
+        //                    sourceDb.ReadDwgFile(filename, FileOpenMode.OpenForReadAndAllShare, true, "");
+        //                    acCurDb.Insert("RiFu_Marconi_abgesetzt_600_Grundriss", sourceDb, true);
+        //                }
+        //            }
+        //            catch
+        //            {
+        //                acDocEd.WriteMessage($"\nBlock RiFu_Marconi_abgesetzt_600_Grundriss.dwg not found.");
+        //                return;
+        //            }
+        //        }
 
-                if (!acBlkTbl.Has("RiFu_Marconi_abgesetzt_1200_Grundriss"))
-                {
-                    try
-                    {
-                        // search for a dwg file named 'blockName' in AutoCAD search paths
-                        var filename = HostApplicationServices.Current.FindFile("RiFu_Marconi_abgesetzt_1200_Grundriss.dwg", acCurDb, FindFileHint.Default);
-                        // add the dwg model space as 'blockName' block definition in the current database block table
-                        using (var sourceDb = new Database(false, true))
-                        {
-                            sourceDb.ReadDwgFile(filename, FileOpenMode.OpenForReadAndAllShare, true, "");
-                            acCurDb.Insert("RiFu_Marconi_abgesetzt_1200_Grundriss", sourceDb, true);
-                        }
-                    }
-                    catch
-                    {
-                        acDocEd.WriteMessage($"\nBlock RiFu_Marconi_abgesetzt_1200_Grundriss.dwg not found.");
-                        return;
-                    }
-                }
+        //        using (var br = new BlockReference(Pointbazowy, acBlkTbl["RiFu_Marconi_abgesetzt_600_Grundriss"]))
+        //        {
+        //            br.Rotation = ConvertToRadians(-270 - Convert.ToDouble(tabelka.napisy_z_excel[ant_nr, 8].Replace(",", "."))) + PN;
+        //            var space = (BlockTableRecord)acTrans.GetObject(acCurDb.CurrentSpaceId, OpenMode.ForWrite);
+        //            space.AppendEntity(br);
+        //            acTrans.AddNewlyCreatedDBObject(br, true);
 
-                using (var br = new BlockReference(Pointbazowy, acBlkTbl["RiFu_Marconi_abgesetzt_1200_Grundriss"]))
-                {
-                    br.Rotation = ConvertToRadians(-270 - Convert.ToDouble(tabelka.napisy_z_excel[ant_nr, 8].Replace(",", "."))) + PN;
-                    var space = (BlockTableRecord)acTrans.GetObject(acCurDb.CurrentSpaceId, OpenMode.ForWrite);
-                    space.AppendEntity(br);
-                    acTrans.AddNewlyCreatedDBObject(br, true);
+        //            //wstaw opis 
 
-                    //wstaw opis 
-
-                    MText acMText = new MText();
-                    acMText.SetDatabaseDefaults();
-                    acMText.SetAttachmentMovingLocation(AttachmentPoint.MiddleCenter);
-                    acMText.Location = new Point3d(2000 + Pointbazowy.X, Pointbazowy.Y, 0);
-                    acMText.ColorIndex = 7;
-                    acMText.Contents = tabelka.napisy_z_excel[ant_nr, 1] + ", %%C" + tabelka.napisy_z_excel[ant_nr, 3] + "\n" + tabelka.napisy_z_excel[ant_nr, 8] + "%%d";
-                    acMText.TextHeight = 200;
-
-
-                    space.AppendEntity(acMText);
-                    acTrans.AddNewlyCreatedDBObject(acMText, true);
-                }
-                acTrans.Commit();
-            }
-        }
-        public void rzut_300_zintegrowane_odu(int ant_nr, Tabelka tabelka, double PN, Point3d Pointbazowy)
-        {
-            Document acDoc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
-            Database acCurDb = acDoc.Database;
-
-            using (Transaction acTrans = acCurDb.TransactionManager.StartTransaction())
-            {
-                Editor acDocEd = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
-
-                BlockTable acBlkTbl;
-                acBlkTbl = acTrans.GetObject(acCurDb.BlockTableId, OpenMode.ForWrite) as BlockTable;
-
-                if (!acBlkTbl.Has("RiFu_Marconi_integriert_300_Grundriss"))
-                {
-                    try
-                    {
-                        // search for a dwg file named 'blockName' in AutoCAD search paths
-                        var filename = HostApplicationServices.Current.FindFile("RiFu_Marconi_integriert_300_Grundriss.dwg", acCurDb, FindFileHint.Default);
-                        // add the dwg model space as 'blockName' block definition in the current database block table
-                        using (var sourceDb = new Database(false, true))
-                        {
-                            sourceDb.ReadDwgFile(filename, FileOpenMode.OpenForReadAndAllShare, true, "");
-                            acCurDb.Insert("RiFu_Marconi_integriert_300_Grundriss", sourceDb, true);
-                        }
-                    }
-                    catch
-                    {
-                        acDocEd.WriteMessage($"\nBlock RiFu_Marconi_integriert_300_Grundriss.dwg not found.");
-                        return;
-                    }
-                }
-
-                using (var br = new BlockReference(Pointbazowy, acBlkTbl["RiFu_Marconi_integriert_300_Grundriss"]))
-                {
-                    br.Rotation = ConvertToRadians(-270 - Convert.ToDouble(tabelka.napisy_z_excel[ant_nr, 8].Replace(",", "."))) + PN;
-                    var space = (BlockTableRecord)acTrans.GetObject(acCurDb.CurrentSpaceId, OpenMode.ForWrite);
-                    space.AppendEntity(br);
-                    acTrans.AddNewlyCreatedDBObject(br, true);
-
-                    //wstaw opis 
-
-                    MText acMText = new MText();
-                    acMText.SetDatabaseDefaults();
-                    acMText.SetAttachmentMovingLocation(AttachmentPoint.MiddleCenter);
-                    acMText.Location = new Point3d(2000 + Pointbazowy.X, Pointbazowy.Y, 0);
-                    acMText.ColorIndex = 7;
-                    acMText.Contents = tabelka.napisy_z_excel[ant_nr, 1] + ", %%C" + tabelka.napisy_z_excel[ant_nr, 3] + "\n" + tabelka.napisy_z_excel[ant_nr, 8] + "%%d";
-                    acMText.TextHeight = 200;
+        //            MText acMText = new MText();
+        //            acMText.SetDatabaseDefaults();
+        //            acMText.SetAttachmentMovingLocation(AttachmentPoint.MiddleCenter);
+        //            acMText.Location = new Point3d(2000 + Pointbazowy.X, Pointbazowy.Y, 0);
+        //            acMText.ColorIndex = 7;
+        //            acMText.Contents = tabelka.napisy_z_excel[ant_nr, 1] + ", %%C" + tabelka.napisy_z_excel[ant_nr, 3] + "\n" + tabelka.napisy_z_excel[ant_nr, 8] + "%%d";
+        //            acMText.TextHeight = 200;
 
 
-                    space.AppendEntity(acMText);
-                    acTrans.AddNewlyCreatedDBObject(acMText, true);
-                }
-                acTrans.Commit();
-            }
-        }
-        public void rzut_600_zintegrowane_odu(int ant_nr, Tabelka tabelka, double PN, Point3d Pointbazowy)
-        {
-            Document acDoc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
-            Database acCurDb = acDoc.Database;
+        //            space.AppendEntity(acMText);
+        //            acTrans.AddNewlyCreatedDBObject(acMText, true);
+        //        }
+        //        acTrans.Commit();
+        //    }
+        //}
 
-            using (Transaction acTrans = acCurDb.TransactionManager.StartTransaction())
-            {
-                Editor acDocEd = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
+        //public void rzut_1200_osobne_odu(int ant_nr, Tabelka tabelka, double PN, Point3d Pointbazowy)
+        //{
+        //    Document acDoc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
+        //    Database acCurDb = acDoc.Database;
 
-                BlockTable acBlkTbl;
-                acBlkTbl = acTrans.GetObject(acCurDb.BlockTableId, OpenMode.ForWrite) as BlockTable;
+        //    using (Transaction acTrans = acCurDb.TransactionManager.StartTransaction())
+        //    {
+        //        Editor acDocEd = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
 
-                if (!acBlkTbl.Has("RiFu_Marconi_integriert_600_Grundriss"))
-                {
-                    try
-                    {
-                        // search for a dwg file named 'blockName' in AutoCAD search paths
-                        var filename = HostApplicationServices.Current.FindFile("RiFu_Marconi_integriert_600_Grundriss.dwg", acCurDb, FindFileHint.Default);
-                        // add the dwg model space as 'blockName' block definition in the current database block table
-                        using (var sourceDb = new Database(false, true))
-                        {
-                            sourceDb.ReadDwgFile(filename, FileOpenMode.OpenForReadAndAllShare, true, "");
-                            acCurDb.Insert("RiFu_Marconi_integriert_600_Grundriss", sourceDb, true);
-                        }
-                    }
-                    catch
-                    {
-                        acDocEd.WriteMessage($"\nBlock RiFu_Marconi_integriert_600_Grundriss.dwg not found.");
-                        return;
-                    }
-                }
+        //        BlockTable acBlkTbl;
+        //        acBlkTbl = acTrans.GetObject(acCurDb.BlockTableId, OpenMode.ForWrite) as BlockTable;
 
-                using (var br = new BlockReference(Pointbazowy, acBlkTbl["RiFu_Marconi_integriert_600_Grundriss"]))
-                {
-                    br.Rotation = ConvertToRadians(-270 - Convert.ToDouble(tabelka.napisy_z_excel[ant_nr, 8].Replace(",", "."))) + PN;
-                    var space = (BlockTableRecord)acTrans.GetObject(acCurDb.CurrentSpaceId, OpenMode.ForWrite);
-                    space.AppendEntity(br);
-                    acTrans.AddNewlyCreatedDBObject(br, true);
+        //        if (!acBlkTbl.Has("RiFu_Marconi_abgesetzt_1200_Grundriss"))
+        //        {
+        //            try
+        //            {
+        //                // search for a dwg file named 'blockName' in AutoCAD search paths
+        //                var filename = HostApplicationServices.Current.FindFile("RiFu_Marconi_abgesetzt_1200_Grundriss.dwg", acCurDb, FindFileHint.Default);
+        //                // add the dwg model space as 'blockName' block definition in the current database block table
+        //                using (var sourceDb = new Database(false, true))
+        //                {
+        //                    sourceDb.ReadDwgFile(filename, FileOpenMode.OpenForReadAndAllShare, true, "");
+        //                    acCurDb.Insert("RiFu_Marconi_abgesetzt_1200_Grundriss", sourceDb, true);
+        //                }
+        //            }
+        //            catch
+        //            {
+        //                acDocEd.WriteMessage($"\nBlock RiFu_Marconi_abgesetzt_1200_Grundriss.dwg not found.");
+        //                return;
+        //            }
+        //        }
 
-                    //wstaw opis 
+        //        using (var br = new BlockReference(Pointbazowy, acBlkTbl["RiFu_Marconi_abgesetzt_1200_Grundriss"]))
+        //        {
+        //            br.Rotation = ConvertToRadians(-270 - Convert.ToDouble(tabelka.napisy_z_excel[ant_nr, 8].Replace(",", "."))) + PN;
+        //            var space = (BlockTableRecord)acTrans.GetObject(acCurDb.CurrentSpaceId, OpenMode.ForWrite);
+        //            space.AppendEntity(br);
+        //            acTrans.AddNewlyCreatedDBObject(br, true);
 
-                    MText acMText = new MText();
-                    acMText.SetDatabaseDefaults();
-                    acMText.SetAttachmentMovingLocation(AttachmentPoint.MiddleCenter);
-                    acMText.Location = new Point3d(2000 + Pointbazowy.X, Pointbazowy.Y, 0);
-                    acMText.ColorIndex = 7;
-                    acMText.Contents = tabelka.napisy_z_excel[ant_nr, 1] + ", %%C" + tabelka.napisy_z_excel[ant_nr, 3] + "\n" + tabelka.napisy_z_excel[ant_nr, 8] + "%%d";
-                    acMText.TextHeight = 200;
+        //            //wstaw opis 
+
+        //            MText acMText = new MText();
+        //            acMText.SetDatabaseDefaults();
+        //            acMText.SetAttachmentMovingLocation(AttachmentPoint.MiddleCenter);
+        //            acMText.Location = new Point3d(2000 + Pointbazowy.X, Pointbazowy.Y, 0);
+        //            acMText.ColorIndex = 7;
+        //            acMText.Contents = tabelka.napisy_z_excel[ant_nr, 1] + ", %%C" + tabelka.napisy_z_excel[ant_nr, 3] + "\n" + tabelka.napisy_z_excel[ant_nr, 8] + "%%d";
+        //            acMText.TextHeight = 200;
 
 
-                    space.AppendEntity(acMText);
-                    acTrans.AddNewlyCreatedDBObject(acMText, true);
-                }
-                acTrans.Commit();
-            }
-        }
+        //            space.AppendEntity(acMText);
+        //            acTrans.AddNewlyCreatedDBObject(acMText, true);
+        //        }
+        //        acTrans.Commit();
+        //    }
+        //}
+        //public void rzut_300_zintegrowane_odu(int ant_nr, Tabelka tabelka, double PN, Point3d Pointbazowy)
+        //{
+        //    Document acDoc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
+        //    Database acCurDb = acDoc.Database;
+
+        //    using (Transaction acTrans = acCurDb.TransactionManager.StartTransaction())
+        //    {
+        //        Editor acDocEd = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
+
+        //        BlockTable acBlkTbl;
+        //        acBlkTbl = acTrans.GetObject(acCurDb.BlockTableId, OpenMode.ForWrite) as BlockTable;
+
+        //        if (!acBlkTbl.Has("RiFu_Marconi_integriert_300_Grundriss"))
+        //        {
+        //            try
+        //            {
+        //                // search for a dwg file named 'blockName' in AutoCAD search paths
+        //                var filename = HostApplicationServices.Current.FindFile("RiFu_Marconi_integriert_300_Grundriss.dwg", acCurDb, FindFileHint.Default);
+        //                // add the dwg model space as 'blockName' block definition in the current database block table
+        //                using (var sourceDb = new Database(false, true))
+        //                {
+        //                    sourceDb.ReadDwgFile(filename, FileOpenMode.OpenForReadAndAllShare, true, "");
+        //                    acCurDb.Insert("RiFu_Marconi_integriert_300_Grundriss", sourceDb, true);
+        //                }
+        //            }
+        //            catch
+        //            {
+        //                acDocEd.WriteMessage($"\nBlock RiFu_Marconi_integriert_300_Grundriss.dwg not found.");
+        //                return;
+        //            }
+        //        }
+
+        //        using (var br = new BlockReference(Pointbazowy, acBlkTbl["RiFu_Marconi_integriert_300_Grundriss"]))
+        //        {
+        //            br.Rotation = ConvertToRadians(-270 - Convert.ToDouble(tabelka.napisy_z_excel[ant_nr, 8].Replace(",", "."))) + PN;
+        //            var space = (BlockTableRecord)acTrans.GetObject(acCurDb.CurrentSpaceId, OpenMode.ForWrite);
+        //            space.AppendEntity(br);
+        //            acTrans.AddNewlyCreatedDBObject(br, true);
+
+        //            //wstaw opis 
+
+        //            MText acMText = new MText();
+        //            acMText.SetDatabaseDefaults();
+        //            acMText.SetAttachmentMovingLocation(AttachmentPoint.MiddleCenter);
+        //            acMText.Location = new Point3d(2000 + Pointbazowy.X, Pointbazowy.Y, 0);
+        //            acMText.ColorIndex = 7;
+        //            acMText.Contents = tabelka.napisy_z_excel[ant_nr, 1] + ", %%C" + tabelka.napisy_z_excel[ant_nr, 3] + "\n" + tabelka.napisy_z_excel[ant_nr, 8] + "%%d";
+        //            acMText.TextHeight = 200;
+
+
+        //            space.AppendEntity(acMText);
+        //            acTrans.AddNewlyCreatedDBObject(acMText, true);
+        //        }
+        //        acTrans.Commit();
+        //    }
+        //}
+        //public void rzut_600_zintegrowane_odu(int ant_nr, Tabelka tabelka, double PN, Point3d Pointbazowy)
+        //{
+        //    Document acDoc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
+        //    Database acCurDb = acDoc.Database;
+
+        //    using (Transaction acTrans = acCurDb.TransactionManager.StartTransaction())
+        //    {
+        //        Editor acDocEd = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
+
+        //        BlockTable acBlkTbl;
+        //        acBlkTbl = acTrans.GetObject(acCurDb.BlockTableId, OpenMode.ForWrite) as BlockTable;
+
+        //        if (!acBlkTbl.Has("RiFu_Marconi_integriert_600_Grundriss"))
+        //        {
+        //            try
+        //            {
+        //                // search for a dwg file named 'blockName' in AutoCAD search paths
+        //                var filename = HostApplicationServices.Current.FindFile("RiFu_Marconi_integriert_600_Grundriss.dwg", acCurDb, FindFileHint.Default);
+        //                // add the dwg model space as 'blockName' block definition in the current database block table
+        //                using (var sourceDb = new Database(false, true))
+        //                {
+        //                    sourceDb.ReadDwgFile(filename, FileOpenMode.OpenForReadAndAllShare, true, "");
+        //                    acCurDb.Insert("RiFu_Marconi_integriert_600_Grundriss", sourceDb, true);
+        //                }
+        //            }
+        //            catch
+        //            {
+        //                acDocEd.WriteMessage($"\nBlock RiFu_Marconi_integriert_600_Grundriss.dwg not found.");
+        //                return;
+        //            }
+        //        }
+
+        //        using (var br = new BlockReference(Pointbazowy, acBlkTbl["RiFu_Marconi_integriert_600_Grundriss"]))
+        //        {
+        //            br.Rotation = ConvertToRadians(-270 - Convert.ToDouble(tabelka.napisy_z_excel[ant_nr, 8].Replace(",", "."))) + PN;
+        //            var space = (BlockTableRecord)acTrans.GetObject(acCurDb.CurrentSpaceId, OpenMode.ForWrite);
+        //            space.AppendEntity(br);
+        //            acTrans.AddNewlyCreatedDBObject(br, true);
+
+        //            //wstaw opis 
+
+        //            MText acMText = new MText();
+        //            acMText.SetDatabaseDefaults();
+        //            acMText.SetAttachmentMovingLocation(AttachmentPoint.MiddleCenter);
+        //            acMText.Location = new Point3d(2000 + Pointbazowy.X, Pointbazowy.Y, 0);
+        //            acMText.ColorIndex = 7;
+        //            acMText.Contents = tabelka.napisy_z_excel[ant_nr, 1] + ", %%C" + tabelka.napisy_z_excel[ant_nr, 3] + "\n" + tabelka.napisy_z_excel[ant_nr, 8] + "%%d";
+        //            acMText.TextHeight = 200;
+
+
+        //            space.AppendEntity(acMText);
+        //            acTrans.AddNewlyCreatedDBObject(acMText, true);
+        //        }
+        //        acTrans.Commit();
+        //    }
+        //}
 
 
         public void rzut_Rifu_rozawiatrow(int ant_nr, Tabelka tabelka, double PN, Point3d Pointbazowy)
