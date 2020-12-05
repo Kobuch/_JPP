@@ -7,6 +7,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 using Excel = Microsoft.Office.Interop.Excel;
 
 namespace _JPP
@@ -1243,10 +1244,23 @@ namespace _JPP
             }
         }
 
+
+
+
         public void JPP_HKT_RLzcad()
         {
-            KHT_odczyt_tabeli29kol();
-            Dodaj_properties__z_cad_do_cad();
+            tabelka = obsluga_Prop_Cad.odczyt_properties();
+            if (!(tabelka.ilewierszy == null || tabelka.ilewierszy == 0) && !(tabelka.ilekolumn == null || tabelka.ilekolumn == 0))
+            {
+                 MessageBoxResult zapytanie= new MessageBoxResult();
+                zapytanie = MessageBox.Show("Uwaga nastapi dadpisanie istniejących danych w properties. \n Czy kontynujesz i nadpisujesz dane", "Uwaga", MessageBoxButton.OKCancel);
+
+                if (zapytanie == MessageBoxResult.Cancel) return;
+            }
+                HKT_czysc_properties_jpp();
+                KHT_odczyt_tabeli29kol();
+                Dodaj_properties__z_cad_do_cad();
+    
         }
 
         public void HKT_odczyt_z_excel()
@@ -1295,40 +1309,50 @@ namespace _JPP
 
         private void Dodaj_properties__z_cad_do_cad()
         {
+
+
             Obsluga_prop_cad obsluga_Prop_Cad = new Obsluga_prop_cad();
 
-            //if ((tabelka.ilewierszy != null) && (tabelka.ilekolumn != null))
-            //{
-            for (int w = 1; w <= tabelka.ilewierszy; w++)
-            {
-                for (int k = 1; k <= tabelka.ilekolumn; k++)
-                {
-
-                    obsluga_Prop_Cad.setDwgProp("JPP-W" + w + "K" + k, tabelka.napisy_z_excel[w, k]);
-                    obsluga_Prop_Cad.setDwgProp("JPP-LayerW" + w + "K" + k, tabelka.napisy_z_excel_kolor[w, k]);
-
-                }
-                //dla jakich kolumn robimy zmiany
-                //kolumna 3 dla obu tabel to srednica
-                // dla tabeli 20kolumnowej azymut to 7 kolumna dla tameli 29kolumnowej to 8 kolumna
-                obsluga_Prop_Cad.setDwgProp("JPP-W" + w + "K3", czysc_liczbe_z_char(obsluga_Prop_Cad.GetCustomProperty("JPP-W" + w + "K3")));
-                if (tabelka.ilekolumn == 29)
-                {
-                    obsluga_Prop_Cad.setDwgProp("JPP-W" + w + "K8", czysc_liczbe_z_char(obsluga_Prop_Cad.GetCustomProperty("JPP-W" + w + "K8")));
-                }
-
-                if (tabelka.ilekolumn == 20)
-                {
-                    obsluga_Prop_Cad.setDwgProp("JPP-W" + w + "K7", czysc_liczbe_z_char(obsluga_Prop_Cad.GetCustomProperty("JPP-W" + w + "K7")));
-
-                }
-
-
-
+            if (!(tabelka.ilekolumn == 20 || tabelka.ilekolumn == 29))
+            { 
+                Autodesk.AutoCAD.ApplicationServices.Application.ShowAlertDialog("Niewłaściwa ilość kolumn w tablce akceptowalne tylko tabelki 20-stare i 29-nowe kolumnowe. \nDane nie zostały zapisane");
+                return;
             }
-            obsluga_Prop_Cad.setDwgProp("JPP-ile_wierszy", tabelka.ilewierszy.ToString()); ;
-            obsluga_Prop_Cad.setDwgProp("JPP-ile_kolumn", tabelka.ilekolumn.ToString());
-            //}
+
+
+                for (int w = 1; w <= tabelka.ilewierszy; w++)
+                {
+                    for (int k = 1; k <= tabelka.ilekolumn; k++)
+                    {
+
+                        obsluga_Prop_Cad.setDwgProp("JPP-W" + w + "K" + k, tabelka.napisy_z_excel[w, k]);
+                        obsluga_Prop_Cad.setDwgProp("JPP-LayerW" + w + "K" + k, tabelka.napisy_z_excel_kolor[w, k]);
+
+                    }
+                    //dla jakich kolumn robimy zmiany
+                    //kolumna 3 dla obu tabel to srednica
+                    // dla tabeli 20kolumnowej azymut to 7 kolumna dla tameli 29kolumnowej to 8 kolumna
+                    obsluga_Prop_Cad.setDwgProp("JPP-W" + w + "K3", czysc_liczbe_z_char(obsluga_Prop_Cad.GetCustomProperty("JPP-W" + w + "K3")));
+                    if (tabelka.ilekolumn == 29)
+                    {
+                        obsluga_Prop_Cad.setDwgProp("JPP-W" + w + "K8", czysc_liczbe_z_char(obsluga_Prop_Cad.GetCustomProperty("JPP-W" + w + "K8")));
+                    }
+
+                    if (tabelka.ilekolumn == 20)
+                    {
+                        obsluga_Prop_Cad.setDwgProp("JPP-W" + w + "K7", czysc_liczbe_z_char(obsluga_Prop_Cad.GetCustomProperty("JPP-W" + w + "K7")));
+
+                    }
+
+                }
+
+                obsluga_Prop_Cad.setDwgProp("JPP-ile_wierszy", tabelka.ilewierszy.ToString()); ;
+                obsluga_Prop_Cad.setDwgProp("JPP-ile_kolumn", tabelka.ilekolumn.ToString());
+
+
+          
+         
+
         }
 
         /// <summary>
@@ -1357,6 +1381,7 @@ namespace _JPP
 
         public void HKT_czysc_properties_jpp()
         {
+            tabelka = new Tabelka();
             Obsluga_prop_cad obsluga_Prop_Cad = new Obsluga_prop_cad();
             obsluga_Prop_Cad.czysc_properties();
 
@@ -1374,9 +1399,10 @@ namespace _JPP
                 UserControl2 userControl2 = new UserControl2(tabelkapokazs20, tabelka);
               
                 userControl2.Show();
+                return;
 
             }
-            else
+            if (tabelka.ilekolumn == 29)
             {
 
                 //todo
@@ -1384,7 +1410,12 @@ namespace _JPP
                
                 UserControl1 userControl1 = new UserControl1(tabelkapokazs, tabelka);
                 userControl1.Show();
+                return;
             }
+
+            Autodesk.AutoCAD.ApplicationServices.Application.ShowAlertDialog("Brak danych w properties, lub niewłasciwa ilośc kolumn lub wierszy");
+
+
         }
    
 
@@ -2204,16 +2235,35 @@ namespace _JPP
         public Tabelka odczyt_properties()
         {
             Tabelka tabelka_tmp = new Tabelka();
-            tabelka_tmp.ilewierszy =Convert.ToInt32(GetCustomProperty("JPP-ile_wierszy"));
-            tabelka_tmp.ilekolumn = Convert.ToInt32(GetCustomProperty("JPP-ile_kolumn"));
+
+            //sprawdz czy w prperties sa dane dotyczace il kolumn i wierszy i sprobuj je przekonwertowac na integer
+            //jezeli nie ma to przyjmij 0
+
+            string tmp_w = GetCustomProperty("JPP-ile_wierszy");
+            string tmp_k = GetCustomProperty("JPP-ile_kolumn");
+
+            int ilewierszy = 0;
+            int ilekolumn = 0;
+            
+            if (!string.IsNullOrEmpty(tmp_w) && !string.IsNullOrEmpty(tmp_k))
+
+            try
+            {
+                 ilewierszy = Convert.ToInt32(tmp_w);
+                 ilekolumn = Convert.ToInt32(tmp_k);
+                }
+            catch (System.Exception)
+            {
+                throw;
+            }
+                
+           
+            tabelka_tmp.ilewierszy = ilewierszy;
+            tabelka_tmp.ilekolumn = ilekolumn;
             tabelka_tmp.kierpolnocy_deg = GetCustomProperty("JPP-PN_deg");
             tabelka_tmp.kierpolnocy_rad = GetCustomProperty("JPP-PN_rad");
 
-
-
-
-            //if ((tabelka_tmp.ilewierszy != null) && (tabelka_tmp.ilekolumn != null))
-            //{
+            //pobierz pozostale dane na podstawie ilosci kolumn i wierszy 
             for (int w = 1; w <= tabelka_tmp.ilewierszy; w++)
             {
                 for (int k = 1; k <= tabelka_tmp.ilekolumn; k++)
@@ -2224,7 +2274,6 @@ namespace _JPP
 
                 }
             }
-            //}
             return tabelka_tmp;
 
 

@@ -79,6 +79,16 @@ namespace JPP
 
         }
 
+
+
+        /// <summary>
+        /// Schemat procedury do rys schematu radiolinii
+        /// </summary>
+        
+        #region  Schemat RIFU
+
+
+
         [CommandMethod("JPP_HKT_schemat")]
         public void JPP_HKT_schemat()
         {
@@ -145,7 +155,10 @@ namespace JPP
             hKT.rysuj_schematpoj(9);
         }
 
+        #endregion
 
+
+        #region Odczyt danych z Excel
 
         /// odczyt napisów z tabeli exela - konkretny format
         [CommandMethod("JPP_HKT_RLzexcel")]
@@ -154,8 +167,11 @@ namespace JPP
             _JPP.HKT_class hKT = new _JPP.HKT_class();
             hKT.HKT_odczyt_z_excel();
         }
+        #endregion
 
+        #region Odczyt danych z tabeli w dwg
 
+        
         /// odczyt napisów z tabeli z CAD - konkretny format
         [CommandMethod("JPP_HKT_RLzcad")]
         public void JPP_HKT_RLzcad()
@@ -163,6 +179,10 @@ namespace JPP
             _JPP.HKT_class hKT = new _JPP.HKT_class();
             hKT.JPP_HKT_RLzcad();
         }
+        #endregion
+
+        #region Obsługa properties
+
 
         [CommandMethod("JPP_HKT_czysc_properties_jpp")]
         public void JPP_HKT_czysc_properties_jpp()
@@ -177,13 +197,57 @@ namespace JPP
             hKT.HKT_sprawdz_properties_jpp();
         }
 
+       [CommandMethod("JPP_HKT_rysuj_tabelke_z_prop")]
+        public void JPP_HKT_rysuj_tabelke_z_prop()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.Rysuj_tabelke_w_cad_z_properties();
+        }
+
+        [CommandMethod("JPP_HKT_tab_zmiana20na29_z_prop")]
+        public void JPP_HKT_tab_zmiana20na29_z_prop()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.tabela_zmiana20na29_z_prop();
+        }
+  
+
+      [CommandMethod("JPP_HKT_akualizacja_Rifu_planowane")]
+        public void JPP_HKT_akualizacja_Rifu_planowane()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.akualizacja_Rifu_planowane();
+        }
+        #endregion
+
+
+        [CommandMethod("JPP_HKT_Rifu_300_0_BOK")]
+        [CommandMethod("JPP_HKT_Rifu_300_0_PRZOD")]
+        [CommandMethod("JPP_HKT_Rifu_300_0_TYL")]
+
+
+
+        #region Pobranie dodatkowych danych PN i tp
+
+        [CommandMethod("JPP_HKT_roza_wiatrow_Rifu")]
+        public void JPP_HKT_roza_wiatrow_Rifu()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.generuj_rzut_rozy_wiatrow();
+        }
+       
+
         [CommandMethod("JPP_HKT_pobierz_kierunek_polnocy")]
         public void pobierz_kierunek_polnocy()
         {
             _JPP.HKT_class hKT = new _JPP.HKT_class();
             hKT.pobierz_kierunek_polnocy();
         }
+        #endregion
 
+
+        #region   Obsługa rzurow radiolinii HKT
+        
         [CommandMethod("JPP_HKT_rzuty_radiolinii_all")]
         public void JPP_HKT_rzuty_radiolinii_all()
         {
@@ -255,33 +319,16 @@ namespace JPP
             hKT.generuj_rzut_1radiolinii(9);
         }
 
-        [CommandMethod("JPP_HKT_rysuj_tabelke_z_prop")]
-        public void JPP_HKT_rysuj_tabelke_z_prop()
-        {
-            _JPP.HKT_class hKT = new _JPP.HKT_class();
-            hKT.Rysuj_tabelke_w_cad_z_properties();
-        }
-
-        [CommandMethod("JPP_HKT_tab_zmiana20na29_z_prop")]
-        public void JPP_HKT_tab_zmiana20na29_z_prop()
-        {
-            _JPP.HKT_class hKT = new _JPP.HKT_class();
-            hKT.tabela_zmiana20na29_z_prop();
-        }
-        [CommandMethod("JPP_HKT_roza_wiatrow_Rifu")]
-        public void JPP_HKT_roza_wiatrow_Rifu()
-        {
-            _JPP.HKT_class hKT = new _JPP.HKT_class();
-            hKT.generuj_rzut_rozy_wiatrow();
-        }
+        #endregion
 
 
-        [CommandMethod("JPP_HKT_akualizacja_Rifu_planowane")]
-        public void JPP_HKT_akualizacja_Rifu_planowane()
-        {
-            _JPP.HKT_class hKT = new _JPP.HKT_class();
-            hKT.akualizacja_Rifu_planowane();
-        }
+
+
+
+     
+
+
+  
 
     }
 }
