@@ -10,6 +10,9 @@ namespace JPP
 {
     public class Class1
     {
+
+        List<object> lista = new List<object>();
+
         public Point3d punkt1 { get; set; }
         public Point3d punkt2 { get; set; }
         public Point3d punkt3 { get; set; }
@@ -221,9 +224,188 @@ namespace JPP
         #endregion
 
 
+
+        #region widoki rifu 300
+
+      
+
         [CommandMethod("JPP_HKT_Rifu_300_0_BOK")]
+        public void JPP_HKT_Rifu_300_0_BOK()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.wstaw_rzut_poziomy_Rifu("JPP_300_0_ODU_BOK");
+        }
+
+        [CommandMethod("JPP_HKT_Rifu_300_0_PION")]
+        public void JPP_HKT_Rifu_300_0_PION()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.wstaw_rzut_poziomy_Rifu("JPP_300_0_ODU_PION");
+        }
+
         [CommandMethod("JPP_HKT_Rifu_300_0_PRZOD")]
+        public void JPP_HKT_Rifu_300_0_PRZOD()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.wstaw_rzut_poziomy_Rifu("JPP_300_0_ODU_PRZOD");
+        }
+
         [CommandMethod("JPP_HKT_Rifu_300_0_TYL")]
+        public void JPP_HKT_Rifu_300_0_TYL()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.wstaw_rzut_poziomy_Rifu("JPP_300_0_ODU_TYL");
+        }
+
+        [CommandMethod("JPP_HKT_Rifu_300_1_BOK")]
+        public void JPP_HKT_Rifu_300_1_BOK()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.wstaw_rzut_poziomy_Rifu("JPP_300_1_ODU_BOK");
+        }
+        [CommandMethod("JPP_HKT_Rifu_300_1_PION")]
+        public void JPP_HKT_Rifu_300_1_PION()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.wstaw_rzut_poziomy_Rifu("JPP_300_1_ODU_PION");
+        }
+
+        [CommandMethod("JPP_HKT_Rifu_300_1_PRZOD")]
+        public void JPP_HKT_Rifu_300_1_PRZOD()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.wstaw_rzut_poziomy_Rifu("JPP_300_1_ODU_PRZOD");
+        }
+
+        [CommandMethod("JPP_HKT_Rifu_300_1_TYL")]
+        public void JPP_HKT_Rifu_300_1_TYL()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.wstaw_rzut_poziomy_Rifu("JPP_300_1_ODU_TYL");
+        }
+
+
+
+        [CommandMethod("JPP_HKT_Rifu_300_2_BOK")]
+        public void JPP_HKT_Rifu_300_2_BOK()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.wstaw_rzut_poziomy_Rifu("JPP_300_2_ODU_BOK");
+        }
+        [CommandMethod("JPP_HKT_Rifu_300_2_PION")]
+        public void JPP_HKT_Rifu_300_2_PION()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.wstaw_rzut_poziomy_Rifu("JPP_300_2_ODU_PION");
+        }
+
+        [CommandMethod("JPP_HKT_Rifu_300_2_PRZOD")]
+        public void JPP_HKT_Rifu_300_2_PRZOD()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.wstaw_rzut_poziomy_Rifu("JPP_300_2_ODU_PRZOD");
+        }
+
+        [CommandMethod("JPP_HKT_Rifu_300_2_TYL")]
+        public void JPP_HKT_Rifu_300_2_TYL()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.wstaw_rzut_poziomy_Rifu("JPP_300_2_ODU_TYL");
+        }
+
+        #endregion
+
+        #region widoki rifu 600
+
+
+
+        [CommandMethod("JPP_HKT_Rifu_600_0_BOK")]
+        public void JPP_HKT_Rifu_600_0_BOK()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.wstaw_rzut_poziomy_Rifu("JPP_600_0_ODU_BOK");
+        }
+
+        [CommandMethod("JPP_HKT_Rifu_600_0_PION")]
+        public void JPP_HKT_Rifu_600_0_PION()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.wstaw_rzut_poziomy_Rifu("JPP_600_0_ODU_PION");
+        }
+
+        [CommandMethod("JPP_HKT_Rifu_600_0_PRZOD")]
+        public void JPP_HKT_Rifu_600_0_PRZOD()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.wstaw_rzut_poziomy_Rifu("JPP_600_0_ODU_PRZOD");
+        }
+
+        [CommandMethod("JPP_HKT_Rifu_600_0_TYL")]
+        public void JPP_HKT_Rifu_600_0_TYL()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.wstaw_rzut_poziomy_Rifu("JPP_600_0_ODU_TYL");
+        }
+
+        [CommandMethod("JPP_HKT_Rifu_600_1_BOK")]
+        public void JPP_HKT_Rifu_600_1_BOK()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.wstaw_rzut_poziomy_Rifu("JPP_600_1_ODU_BOK");
+        }
+        [CommandMethod("JPP_HKT_Rifu_600_1_PION")]
+        public void JPP_HKT_Rifu_600_1_PION()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.wstaw_rzut_poziomy_Rifu("JPP_600_1_ODU_PION");
+        }
+
+        [CommandMethod("JPP_HKT_Rifu_600_1_PRZOD")]
+        public void JPP_HKT_Rifu_600_1_PRZOD()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.wstaw_rzut_poziomy_Rifu("JPP_600_1_ODU_PRZOD");
+        }
+
+        [CommandMethod("JPP_HKT_Rifu_600_1_TYL")]
+        public void JPP_HKT_Rifu_600_1_TYL()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.wstaw_rzut_poziomy_Rifu("JPP_600_1_ODU_TYL");
+        }
+
+
+
+        [CommandMethod("JPP_HKT_Rifu_600_2_BOK")]
+        public void JPP_HKT_Rifu_600_2_BOK()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.wstaw_rzut_poziomy_Rifu("JPP_600_2_ODU_BOK");
+        }
+        [CommandMethod("JPP_HKT_Rifu_600_2_PION")]
+        public void JPP_HKT_Rifu_600_2_PION()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.wstaw_rzut_poziomy_Rifu("JPP_600_2_ODU_PION");
+        }
+
+        [CommandMethod("JPP_HKT_Rifu_600_2_PRZOD")]
+        public void JPP_HKT_Rifu_600_2_PRZOD()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.wstaw_rzut_poziomy_Rifu("JPP_600_2_ODU_PRZOD");
+        }
+
+        [CommandMethod("JPP_HKT_Rifu_600_2_TYL")]
+        public void JPP_HKT_Rifu_600_2_TYL()
+        {
+            _JPP.HKT_class hKT = new _JPP.HKT_class();
+            hKT.wstaw_rzut_poziomy_Rifu("JPP_600_2_ODU_TYL");
+        }
+
+        #endregion
+
+
 
 
 
@@ -259,7 +441,8 @@ namespace JPP
         public void JPP_HKT_rzuty_radiolinii1()
         {
             _JPP.HKT_class hKT = new _JPP.HKT_class();
-            hKT.generuj_rzut_1radiolinii(1,"VHLP","SIAE");
+            lista = new List<object>() { ((int)1)};
+            hKT.generuj_rzut_1radiolinii(lista);
         }
 
 
@@ -267,21 +450,24 @@ namespace JPP
         public void JPP_HKT_rzuty_radiolinii2()
         {
             _JPP.HKT_class hKT = new _JPP.HKT_class();
-            hKT.generuj_rzut_1radiolinii(2);
+            lista = new List<object>() { ((int)2) };
+            hKT.generuj_rzut_1radiolinii(lista);
         }
 
         [CommandMethod("JPP_HKT_rzuty_radiolinii3")]
         public void JPP_HKT_rzuty_radiolinii3()
         {
             _JPP.HKT_class hKT = new _JPP.HKT_class();
-            hKT.generuj_rzut_1radiolinii(3);
+            lista = new List<object>() { ((int)3) };
+            hKT.generuj_rzut_1radiolinii(lista);
         }
 
         [CommandMethod("JPP_HKT_rzuty_radiolinii4")]
         public void JPP_HKT_rzuty_radiolinii4()
         {
             _JPP.HKT_class hKT = new _JPP.HKT_class();
-            hKT.generuj_rzut_1radiolinii(4);
+            lista = new List<object>() { ((int)4) };
+            hKT.generuj_rzut_1radiolinii(lista);
         }
 
 
@@ -289,34 +475,39 @@ namespace JPP
         public void JPP_HKT_rzuty_radiolinii5()
         {
             _JPP.HKT_class hKT = new _JPP.HKT_class();
-            hKT.generuj_rzut_1radiolinii(5);
+            lista = new List<object>() { ((int)5) };
+            hKT.generuj_rzut_1radiolinii(lista);
         }
 
         [CommandMethod("JPP_HKT_rzuty_radiolinii6")]
         public void JPP_HKT_rzuty_radiolinii6()
         {
             _JPP.HKT_class hKT = new _JPP.HKT_class();
-            hKT.generuj_rzut_1radiolinii(6);
+            lista = new List<object>() { ((int)6) };
+            hKT.generuj_rzut_1radiolinii(lista);
         }
 
         [CommandMethod("JPP_HKT_rzuty_radiolinii7")]
         public void JPP_HKT_rzuty_radiolinii7()
         {
             _JPP.HKT_class hKT = new _JPP.HKT_class();
-            hKT.generuj_rzut_1radiolinii(7);
+            lista = new List<object>() { ((int)7) };
+            hKT.generuj_rzut_1radiolinii(lista);
         }
 
         [CommandMethod("JPP_HKT_rzuty_radiolinii8")]
         public void JPP_HKT_rzuty_radiolinii8()
         {
             _JPP.HKT_class hKT = new _JPP.HKT_class();
-            hKT.generuj_rzut_1radiolinii(8);
+            lista = new List<object>() { ((int)8) };
+            hKT.generuj_rzut_1radiolinii(lista);
         }
         [CommandMethod("JPP_HKT_rzuty_radiolinii9")]
         public void JPP_HKT_rzuty_radiolinii9()
         {
             _JPP.HKT_class hKT = new _JPP.HKT_class();
-            hKT.generuj_rzut_1radiolinii(9);
+            lista = new List<object>() { ((int)9) };
+            hKT.generuj_rzut_1radiolinii(lista);
         }
 
         #endregion

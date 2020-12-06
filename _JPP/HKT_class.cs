@@ -905,7 +905,7 @@ namespace _JPP
                 acMTexthol1.Location = new Point3d(X0Y0.X, X0Y0.Y + 14800 + 1230, 0);
                 acMTexthol1.Contents = "Hohlleiter\nL=" + tabelka.napisy_z_excel[wiersz, 14] + " m";
                 acMTexthol1.TextHeight = 250;
-                acMTexthol1.Layer = zmiana_warstwy_tabelka_na_schemat(tabelka.napisy_z_excel_kolor[wiersz, 14]);
+                acMTexthol1.Layer = zmiana_warstwy_tabelka_na_schemat(tabelka.napisy_z_excel_kolor[wiersz, 13]);
 
                 space.AppendEntity(acMTexthol1);
                 acTrans.AddNewlyCreatedDBObject(acMTexthol1, true);
@@ -1457,8 +1457,12 @@ namespace _JPP
             }
         }
 
-        public void generuj_rzut_1radiolinii(int ant_nr)
+        public void generuj_rzut_1radiolinii(List <object> lista)
         {
+
+            int ant_nr =(int)lista[0];
+            Point3d Pointbazowy = new Point3d();
+
             Rzuty_radiolinii rzuty_Radiolinii = new Rzuty_radiolinii();
 
             Obsluga_prop_cad obsluga_Prop_Cad = new Obsluga_prop_cad();
@@ -1482,41 +1486,67 @@ namespace _JPP
             using (Transaction acTrans = acCurDb.TransactionManager.StartTransaction())
             {
                 Editor acDocEd = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
-                Point3d Pointbazowy = acDocEd.GetPoint("\n Wskaż miejsce wstwienia radiolinii").Value;
+
+                if ( lista.Count<2 || lista[1] == null) 
+                { 
+                Pointbazowy = acDocEd.GetPoint("\n Wskaż miejsce wstwienia radiolinii").Value;
+                }
+                else
+                {Pointbazowy = (Point3d)lista[1];
+                }
+
 
                 //add rozmiar
                 String nazwa_bloku = "JPP_" + tabelka.napisy_z_excel[ant_nr, 3];
-           
-                
-                //add  ODu ile
 
-                switch (tabelka.napisy_z_excel[ant_nr, 18])
+                if (tabelka.napisy_z_excel[ant_nr, 17].Length>3 &&  tabelka.napisy_z_excel[ant_nr, 17].ToUpper().Substring(0,3) == "ABG") { nazwa_bloku += "_0_ODU"; }
+                else
                 {
-                    case "1":
-                        nazwa_bloku += "_1_ODU";
-                        break;
-                    case "2":
-                        nazwa_bloku += "_2_ODU";
-                        break;
-                    default:
-                        nazwa_bloku += "_0_ODU";
-                        break;
+                    //add  ODu ile
+                    switch (tabelka.napisy_z_excel[ant_nr, 18])
+                    {
+                        case "1":
+                            nazwa_bloku += "_1_ODU";
+                            break;
+                        case "2":
+                            nazwa_bloku += "_2_ODU";
+                            break;
+                        default:
+                            nazwa_bloku += "_0_ODU";
+                            break;
+                    }
                 }
-                 
-             
-
                 nazwa_bloku += "_PION";
-
-
-
                 rzuty_Radiolinii.rzut_radiolinii(ant_nr, tabelka, PN, Pointbazowy, nazwa_bloku);
-
                 acTrans.Commit();
             }
+        }
 
+        public void wstaw_rzut_poziomy_Rifu(string _nazwa_bloku)
+        {
+            Point3d Pointbazowy = new Point3d();
+            Rzuty_radiolinii rzuty_Radiolinii = new Rzuty_radiolinii();
+
+            //pobierz wartości położenia
+
+            Document acDoc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
+            Database acCurDb = acDoc.Database;
+
+            using (Transaction acTrans = acCurDb.TransactionManager.StartTransaction())
+            {
+                Editor acDocEd = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
+     
+                    Pointbazowy = acDocEd.GetPoint("\n Wskaż miejsce wstwienia radiolinii").Value;
+
+                if (string.IsNullOrEmpty(_nazwa_bloku)) return;  
+                
+                rzuty_Radiolinii.Widok_poziomy_radiolinii(Pointbazowy, _nazwa_bloku);
+                acTrans.Commit();
+            }
         }
 
 
+       
 
 
 
@@ -1626,6 +1656,11 @@ namespace _JPP
         {
 
             Rzuty_radiolinii rzuty_Radiolinii = new Rzuty_radiolinii();
+            List<object> lista1 = new List<object>();
+            lista1.Add(new int());
+            lista1.Add(new Point3d());
+
+
 
             Obsluga_prop_cad obsluga_Prop_Cad = new Obsluga_prop_cad();
             tabelka = obsluga_Prop_Cad.odczyt_properties();
@@ -1657,19 +1692,24 @@ namespace _JPP
 
                     if (!string.IsNullOrEmpty(tabelka.napisy_z_excel[ant_nr, 1]))
                         {
-                        generuj_rzut_1radiolinii(ant_nr);
+                        lista1[0] = ant_nr;
+                        lista1[1] = Pointbazowy;
+                        generuj_rzut_1radiolinii(lista1);
 
                          Pointbazowy = new Point3d(Pointbazowy.X, Pointbazowy.Y - 2000, Pointbazowy.Z);
                         }
-
-                  
-                   
-
                 }
                 acTrans.Commit();
-
             }
         }
+
+
+
+
+
+
+
+
 
         public void generuj_rzut_rozy_wiatrow()
         {
@@ -1681,14 +1721,22 @@ namespace _JPP
             string PN_text = "";
             PN_text = obsluga_Prop_Cad.GetCustomProperty("JPP-PN_rad");
             double PN = Math.PI / 2;
-            if (PN_text != null) PN = Convert.ToDouble(PN_text);
+            if (!string.IsNullOrEmpty( PN_text)) PN = Convert.ToDouble(PN_text);
 
 
+            //sprawdzenie czy tabelka jest nowa 29 elementowa
+            if (tabelka.ilekolumn!=29)
+            {
+
+                Autodesk.AutoCAD.ApplicationServices.Application.ShowAlertDialog("Nie rozpoznano tabeli 29 kolumnowej. Pominięto rysowamie rózy wiatrów dla RL");
+                return;
+            }
             //pobierz wartości położenia
 
-           // Document acDoc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
-            Database acCurDb = acDoc.Database;
+           Document acDoc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
 
+            Database acCurDb = acDoc.Database;
+            acDoc.LockDocument();
             using (Transaction acTrans = acCurDb.TransactionManager.StartTransaction())
             {
                 Editor acDocEd = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
@@ -1704,8 +1752,7 @@ namespace _JPP
                 for (int ant_nr = 1; ant_nr <= tabelka.ilewierszy; ant_nr++)
                 {
                         rzuty_Radiolinii.rzut_Rifu_rozawiatrow(ant_nr, tabelka, PN, Pointbazowy);
-                    
-
+         
                 }
                 acTrans.Commit();
 
@@ -1770,6 +1817,7 @@ namespace _JPP
 
 
             Document acDoc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
+            acDoc.LockDocument();
             Database acCurDb = acDoc.Database;
 
             using (Transaction acTrans = acCurDb.TransactionManager.StartTransaction())
@@ -1804,7 +1852,7 @@ namespace _JPP
 
                 using (var br = new BlockReference(Pointbazowy, acBlkTbl[nazwa_bloku]))
                 {
-                    br.Rotation = ConvertToRadians(-270 - Convert.ToDouble(tabelka.napisy_z_excel[ant_nr, 8].Replace(",", "."))) + PN;
+                    br.Rotation = ConvertToRadians(-90 - Convert.ToDouble(tabelka.napisy_z_excel[ant_nr, 8].Replace(",", "."))) + PN;
                     var space = (BlockTableRecord)acTrans.GetObject(acCurDb.CurrentSpaceId, OpenMode.ForWrite);
                     space.AppendEntity(br);
                     acTrans.AddNewlyCreatedDBObject(br, true);
@@ -1816,7 +1864,7 @@ namespace _JPP
                     acMText.SetAttachmentMovingLocation(AttachmentPoint.MiddleCenter);
                     acMText.Location = new Point3d(2000 + Pointbazowy.X, Pointbazowy.Y, 0);
                     acMText.ColorIndex = 7;
-                    acMText.Contents = tabelka.napisy_z_excel[ant_nr, 1] + ", %%C" + tabelka.napisy_z_excel[ant_nr, 3] + "\n" + tabelka.napisy_z_excel[ant_nr, 8] + "%%d";
+                    acMText.Contents = tabelka.napisy_z_excel[ant_nr, 1] + ", %%C" + tabelka.napisy_z_excel[ant_nr, 3] +  "\n" + tabelka.napisy_z_excel[ant_nr, 8] + "%%d" + "\n" + tabelka.napisy_z_excel[ant_nr, 18] + " ODU, " + tabelka.napisy_z_excel[ant_nr, 17];
                     acMText.TextHeight = 200;
 
 
@@ -1827,6 +1875,56 @@ namespace _JPP
             }
         }
 
+
+
+
+
+             public void Widok_poziomy_radiolinii(Point3d Pointbazowy, string nazwa_bloku)
+        {
+
+
+            Document acDoc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
+            acDoc.LockDocument();
+            Database acCurDb = acDoc.Database;
+
+            using (Transaction acTrans = acCurDb.TransactionManager.StartTransaction())
+            {
+                Editor acDocEd = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
+
+                BlockTable acBlkTbl;
+                acBlkTbl = acTrans.GetObject(acCurDb.BlockTableId, OpenMode.ForWrite) as BlockTable;
+
+                if (!acBlkTbl.Has(nazwa_bloku))
+                {
+                    try
+                    {
+                        // search for a dwg file named 'blockName' in AutoCAD search paths
+                        var filename = HostApplicationServices.Current.FindFile(nazwa_bloku + ".dwg", acCurDb, FindFileHint.Default);
+                        // add the dwg model space as 'blockName' block definition in the current database block table
+                        using (var sourceDb = new Database(false, true))
+                        {
+                            sourceDb.ReadDwgFile(filename, FileOpenMode.OpenForReadAndAllShare, true, "");
+                            acCurDb.Insert(nazwa_bloku, sourceDb, true);
+                        }
+                    }
+                    catch
+                    {
+                        acDocEd.WriteMessage($"\n" + nazwa_bloku + ".dwg not found.");
+                        return;
+                    }
+                }
+
+                using (var br = new BlockReference(Pointbazowy, acBlkTbl[nazwa_bloku]))
+                {
+                  
+                    var space = (BlockTableRecord)acTrans.GetObject(acCurDb.CurrentSpaceId, OpenMode.ForWrite);
+                    space.AppendEntity(br);
+                    acTrans.AddNewlyCreatedDBObject(br, true);
+                
+                }
+                acTrans.Commit();
+            }
+        }
 
 
 
@@ -2120,41 +2218,49 @@ namespace _JPP
         public void rzut_Rifu_rozawiatrow(int ant_nr, Tabelka tabelka, double PN, Point3d Pointbazowy)
         {
             Document acDoc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
+            acDoc.LockDocument();
             Database acCurDb = acDoc.Database;
 
             using (Transaction acTrans = acCurDb.TransactionManager.StartTransaction())
             {
                 Editor acDocEd = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument.Editor;
-
+                
                 BlockTable acBlkTbl;
                 acBlkTbl = acTrans.GetObject(acCurDb.BlockTableId, OpenMode.ForWrite) as BlockTable;
 
-                if (!acBlkTbl.Has("Richtungspfeil_dyn"))
+                if (!acBlkTbl.Has("Richtungspfeil_dyn_n"))
                 {
                     try
                     {
                         // search for a dwg file named 'blockName' in AutoCAD search paths
-                        var filename = HostApplicationServices.Current.FindFile("Richtungspfeil_dyn.dwg", acCurDb, FindFileHint.Default);
+                        var filename = HostApplicationServices.Current.FindFile("Richtungspfeil_dyn_n.dwg", acCurDb, FindFileHint.Default);
                         // add the dwg model space as 'blockName' block definition in the current database block table
                         using (var sourceDb = new Database(false, true))
                         {
                             sourceDb.ReadDwgFile(filename, FileOpenMode.OpenForReadAndAllShare, true, "");
-                            acCurDb.Insert("Richtungspfeil_dyn", sourceDb, true);
+                            acCurDb.Insert("Richtungspfeil_dyn_n", sourceDb, true);
                         }
                     }
                     catch
                     {
-                        acDocEd.WriteMessage($"\nBlock Richtungspfeil_dyn.dwg not found.");
+                        acDocEd.WriteMessage($"\nBlock Richtungspfeil_dyn_n.dwg not found.");
                         return;
                     }
                 }
 
-                using (var br = new BlockReference(Pointbazowy, acBlkTbl["Richtungspfeil_dyn"]))
+                using (var br = new BlockReference(Pointbazowy, acBlkTbl["Richtungspfeil_dyn_n"]))
                 {
-
+                    //todo
+                   //nie robic convertu przed sprawdzeniem wartosci
 
                     br.Rotation = ConvertToRadians(-90 - Convert.ToDouble(tabelka.napisy_z_excel[ant_nr, 8].Replace(",", "."))) + PN;
                     br.TransformBy(Matrix3d.Scaling(100, Pointbazowy));
+                   
+
+                    //todo
+                    //sprawdzenie czy layer istnieje
+                    
+                    
                     br.Layer = tabelka.napisy_z_excel_kolor[ant_nr, 8];
                     var space = (BlockTableRecord)acTrans.GetObject(acCurDb.CurrentSpaceId, OpenMode.ForWrite);
                     space.AppendEntity(br);
@@ -2658,8 +2764,8 @@ namespace _JPP
             {
                 for (int k = 1; k <= rifutabelka2.ilekolumn; k++)
                 {
-                    textydocads.Add(new Textydocad(rifutabelka2.napisy_z_excel[w, k], w, k, "", ""));
-
+                    textydocads.Add(new Textydocad(rifutabelka2.napisy_z_excel[w, k], w, k, rifutabelka2.napisy_z_excel_kolor[w, k], ""));
+                 
 
 
                 }
@@ -2687,13 +2793,11 @@ namespace _JPP
         public void wstawiajtexttabelkidoCAD()
         //wstawia opisy dla sterj tabelki 20 kolumn
         {
+            Document acDoc = Autodesk.AutoCAD.ApplicationServices.Application.DocumentManager.MdiActiveDocument;
+            acDoc.LockDocument();
+
+
             acCurDb = acDoc.Database;
-
-
-       
-
-
-
 
 
             using (Transaction acTrans = acCurDb.TransactionManager.StartTransaction())
@@ -2711,33 +2815,66 @@ namespace _JPP
 
                 // check if the block table already has the 'blockName'" block
 
+
                 foreach (Textydocad textydocad in textydocads)
                 {
                     // Create a multiline text object
-                    MText acMText = new MText();
+
+
+                    DBText acMText = new DBText();
                     acMText.SetDatabaseDefaults();
-                    acMText.SetAttachmentMovingLocation(AttachmentPoint.MiddleCenter);
-                    acMText.Location = new Point3d(textydocad.X0 + Pointbazowy.X, textydocad.Y0 + Pointbazowy.Y, 0);
-                    acMText.ColorIndex = 7;
-                    acMText.Contents = textydocad.Text;
-                    acMText.TextHeight = 200;
+                    acMText.Justify= (AttachmentPoint.MiddleCenter);
+                    acMText.AlignmentPoint = new Point3d(textydocad.X0 + Pointbazowy.X, textydocad.Y0 + Pointbazowy.Y, 0);
+                    acMText.Layer = "0";
 
-                    if (textydocad.KolorTla == "65535")
-                    {
-                        acMText.ShowBorders = true;
-                        acMText.BackgroundFill = true;
-                        acMText.BackgroundFillColor = Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 2);
-                        acMText.BackgroundScaleFactor = 1;
-                        acMText.UseBackgroundColor = false;
-                        acMText.ColorIndex = 1;
-                    }
+                    if (textydocad.Text == "") { acMText.TextString = "-"; }
+                    else { acMText.TextString = textydocad.Text; }
+                    acMText.Height = 200;
 
-                    acMText.Width = (double)textydocad.SzerTla;
-                    acMText.Height = (double)textydocad.WysTla;
+                    //sprawdzic czy jest taka wartswa i zmienić
+                    LayerTable layerTable = acTrans.GetObject(acCurDb.LayerTableId, OpenMode.ForRead) as LayerTable;
+
+                    if (layerTable.Has(textydocad.Kolor) )
+                        { acMText.Layer = textydocad.Kolor; }
+           
+
+
+                    acMText.WidthFactor = (double)0.8;
+                  //  acMText.Height = (double)textydocad.WysTla;
 
                     acBlkTblRec.AppendEntity(acMText);
                     acTrans.AddNewlyCreatedDBObject(acMText, true);
                 }
+
+                //foreach (Textydocad textydocad in textydocads)
+                //{
+                //    // Create a multiline text object
+                //    MText acMText = new MText();
+                //    acMText.SetDatabaseDefaults();
+                //    acMText.SetAttachmentMovingLocation(AttachmentPoint.MiddleCenter);
+                //    acMText.Location = new Point3d(textydocad.X0 + Pointbazowy.X, textydocad.Y0 + Pointbazowy.Y, 0);
+                //    acMText.ColorIndex = 7;
+
+                //    if (textydocad.Text == "") { acMText.Contents = "-"; }
+                //    else { acMText.Contents = textydocad.Text; }
+                //    acMText.TextHeight = 200;
+
+                //    if (textydocad.KolorTla == "65535")
+                //    {
+                //        acMText.ShowBorders = true;
+                //        acMText.BackgroundFill = true;
+                //        acMText.BackgroundFillColor = Autodesk.AutoCAD.Colors.Color.FromColorIndex(Autodesk.AutoCAD.Colors.ColorMethod.ByAci, 2);
+                //        acMText.BackgroundScaleFactor = 1;
+                //        acMText.UseBackgroundColor = false;
+                //        acMText.ColorIndex = 1;
+                //    }
+
+                //    acMText.Width = (double)textydocad.SzerTla;
+                //    acMText.Height = (double)textydocad.WysTla;
+
+                //    acBlkTblRec.AppendEntity(acMText);
+                //    acTrans.AddNewlyCreatedDBObject(acMText, true);
+                //}
 
                 acTrans.Commit();
 
@@ -2764,22 +2901,22 @@ namespace _JPP
 
 
 
-                if (!acBlkTbl.Has("AntennenTabelle_Rifu_Kopf"))
+                if (!acBlkTbl.Has("AntennenTabelle_Rifu_Kopf_n"))
                 {
                     try
                     {
                         // search for a dwg file named 'blockName' in AutoCAD search paths
-                        var filename = HostApplicationServices.Current.FindFile("AntennenTabelle_Rifu_Kopf.dwg", acCurDb, FindFileHint.Default);
+                        var filename = HostApplicationServices.Current.FindFile("AntennenTabelle_Rifu_Kopf_n.dwg", acCurDb, FindFileHint.Default);
                         // add the dwg model space as 'blockName' block definition in the current database block table
                         using (var sourceDb = new Database(false, true))
                         {
                             sourceDb.ReadDwgFile(filename, FileOpenMode.OpenForReadAndAllShare, true, "");
-                            acCurDb.Insert("AntennenTabelle_Rifu_Kopf", sourceDb, true);
+                            acCurDb.Insert("AntennenTabelle_Rifu_Kopf_n", sourceDb, true);
                         }
                     }
                     catch
                     {
-                        acDocEd.WriteMessage($"\nBlock AntennenTabelle_Rifu_Kopf.dwg not found.");
+                        acDocEd.WriteMessage($"\nBlock AntennenTabelle_Rifu_Kopf_n.dwg not found.");
                         return;
                     }
                 }
@@ -2808,7 +2945,7 @@ namespace _JPP
                 punktwstawienia = new Point3d(Pointbazowy.X, Pointbazowy.Y + 1750, 0);
 
                 // create a new block reference
-                using (var br = new BlockReference(punktwstawienia, acBlkTbl["AntennenTabelle_Rifu_Kopf"]))
+                using (var br = new BlockReference(punktwstawienia, acBlkTbl["AntennenTabelle_Rifu_Kopf_n"]))
                 {
                   
                     var space = (BlockTableRecord)acTrans.GetObject(acCurDb.CurrentSpaceId, OpenMode.ForWrite);
